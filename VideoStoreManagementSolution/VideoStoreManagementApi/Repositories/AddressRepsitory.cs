@@ -25,6 +25,31 @@ namespace VideoStoreManagementApi.Repositories
             var item = await _context.Addresses.SingleOrDefaultAsync(x => x.Id == key);
             return item;
         }
+        public async Task MakePrimaryAddressFalse(int uid)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+
+                    var address = await _context.Addresses.FirstOrDefaultAsync(a => a.CustomerId == uid && a.PrimaryAdress == true);
+                    if (address == null) return;
+                    address.PrimaryAdress = false;
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+        }
+        public async Task<bool> CheckAddressIsOfUser(int uid , int addressId)
+        {
+            var res = await _context.Addresses.AnyAsync(a => a.CustomerId == uid && a.Id == addressId);
+            return res;
+        }
+
 
     }
 }

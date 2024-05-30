@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace VideoStoreManagementApi.Models
 {
@@ -14,6 +15,7 @@ namespace VideoStoreManagementApi.Models
         public bool PrimaryAdress { get; set; }
         public int CustomerId { get; set; }
         [ForeignKey(nameof(CustomerId))]
+        [JsonIgnore]
         public Customer Customer { get; set; }
     }
 }

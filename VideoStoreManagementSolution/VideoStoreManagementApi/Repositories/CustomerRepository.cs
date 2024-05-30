@@ -2,6 +2,7 @@
 using VideoStoreManagementApi.Contexts;
 using VideoStoreManagementApi.Interfaces.Repositories;
 using VideoStoreManagementApi.Models;
+using VideoStoreManagementApi.Models.Enums;
 
 namespace VideoStoreManagementApi.Repositories
 {
@@ -21,6 +22,12 @@ namespace VideoStoreManagementApi.Repositories
                 SingleOrDefaultAsync(c => c.Uid == key);
             return item;
         }
-        
+
+        public async Task<MembershipType> GetMembershipType(int id)
+        {
+            var item = await _context.Customers.SingleOrDefaultAsync(c => c.Uid == id);
+            return item.MembershipType;
+
+        }
     }
 }

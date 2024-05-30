@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using VideoStoreManagementApi.Contexts;
 using VideoStoreManagementApi.Interfaces.Repositories;
 using VideoStoreManagementApi.Models;
@@ -17,6 +18,18 @@ namespace VideoStoreManagementApi.Repositories
         {
             var item = await _context.Inventories.SingleOrDefaultAsync(x => x.VideoId == key);
             return item;
+        }
+        public async Task<int> GetQty(int id)
+        {
+            var item = await _context.Inventories.SingleOrDefaultAsync(i => i.VideoId == id);
+            return item.Stock;
+        }
+        public async Task<bool> UpdateStock(int qty, int videoId)
+        {
+            var item = await _context.Inventories.SingleOrDefaultAsync(i => i.VideoId == videoId);
+            if (item == null) return false;
+            item.Stock -= qty;
+            return true;
         }
     }
 }

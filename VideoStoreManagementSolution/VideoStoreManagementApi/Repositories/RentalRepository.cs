@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VideoStoreManagementApi.Contexts;
+using VideoStoreManagementApi.Interfaces.Repositories;
 using VideoStoreManagementApi.Models;
 
 namespace VideoStoreManagementApi.Repositories
 {
-    public class RentalRepository:CRUDRepository<int, Rental>
+    public class RentalRepository:CRUDRepository<int, Rental> , IRentalRepository
     {
         public RentalRepository(VideoStoreContext context) : base(context) { }
 

@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace VideoStoreManagementApi.Models
 {
-    public class OrderItems
+    public class OrderItem
     {
         public int Id { get; set; } 
         public int OrderId { get; set; }
-        [ForeignKey(nameof(OrderId))]   
+        [ForeignKey(nameof(OrderId))]
+        [JsonIgnore]
         public Order Order { get; set; }
         public int VideoId { get; set; }
         [ForeignKey(nameof(VideoId))]   

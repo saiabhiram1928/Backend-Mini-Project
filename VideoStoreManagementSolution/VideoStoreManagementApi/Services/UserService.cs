@@ -14,33 +14,118 @@ namespace VideoStoreManagementApi.Services
         private readonly IUserRepository _userRepository;
         private readonly IDTOService _dtoService;
         private readonly IAddressRepository _addressRepository;
+        private readonly IHashService _hashService;
 
-        public UserService(ITokenService tokenService , ICustomerRepository customerRepository , IUserRepository userRepository, IDTOService dTOService  , IAddressRepository addressRepository) 
+        public UserService(ITokenService tokenService , ICustomerRepository customerRepository , IUserRepository userRepository, IDTOService dTOService  , IAddressRepository addressRepository,IHashService hashService) 
         {
             _tokenService = tokenService;
             _customerRepository = customerRepository;
             _userRepository = userRepository; 
             _dtoService = dTOService;
             _addressRepository = addressRepository; 
+            _hashService = hashService;
         }
-        public Task<Address> AddAddress(Address address)
+        public async Task<AddressDTO> AddAddress(AddressRegisterDTO addressRegisterDTO)
         {
-            throw new NotImplementedException();
+            var addressDTO = _dtoService.MapAddressRegisterDTOTOAddressDTO(addressRegisterDTO);
+            var uid = _tokenService.GetUidFromToken();
+            if (uid == null)
+            {
+                throw new UnauthorizedUserException("Token Invalid");
+            }
+            var checkUserExist = await _userRepository.CheckUserExist((int)uid);
+            if(!checkUserExist)
+            {
+                throw new NoSuchItemInDbException("The User With Given Doenst exist");
+            }
+
+            Address address = new Address();
+            address.CustomerId = (int)uid;
+             if(addressDTO.PrimaryAdress == true)
+             {
+                await _addressRepository.MakePrimaryAddressFalse((int)uid);
+              }
+            address = _dtoService.MapAddressDTOToAddress(addressDTO, address);
+            address = await _addressRepository.Add(address);
+            if (address == null) throw new DbException();
+            var addressDTOReturn = _dtoService.MapAddressToAddressDTO(address);
+            return addressDTOReturn;
+            
         }
 
-        public Task<bool> ChangePassword(string newPasswd)
+        public async Task<string> ChangePassword(string newPasswd,string oldPasswd)
         {
-            ;throw new NotImplementedException();
+            var id = _tokenService.GetUidFromToken();
+            if (id == null)
+            {
+                throw new UnauthorizedUserException("Token Invalid");
+            }
+            var user = await _userRepository.GetById((int)id);
+            if(user== null)
+            {
+                throw new NoSuchItemInDbException("The User with Given Id Doesnt exist");
+
+            }
+            var comparePasswd = _hashService.AuthenticatePassword(oldPasswd ,user.Salt, user.Password);
+            if (!comparePasswd)
+            {
+                throw new UnauthorizedAccessException("Please Enter Right Password");
+            }
+            var (passwd, salt) = _hashService.HashPasswd(newPasswd);
+            user.Password = passwd;
+            user.Salt = salt;
+            user = await _userRepository.Update(user);
+            if (user == null) throw new DbException();
+            return "Sucessfully Updated Password";
+
         }
 
-        public Task<Address> DeleteAdress(Address address)
+        public async Task<string> DeleteAddress(int id)
         {
-            throw new NotImplementedException();
+            var address = await _addressRepository.GetById(id);
+            if(address == null)
+            {
+                throw new NoSuchItemInDbException("The Address With Given Doesnt exist");
+
+            }
+            var uid = _tokenService.GetUidFromToken();
+            if(uid != address.CustomerId)
+            {
+                throw new UnauthorizedAccessException("You Dont Have Previlage to edit this address");
+            }
+            var res = await _addressRepository.Delete(id);
+            if(!res)
+            {
+                throw new DbException();
+            }
+            return "Sucess";
         }
 
-        public Task<Address> EditAddress(Address address)
+        public async Task<AddressDTO> EditAddress(AddressDTO addressDTO)
         {
-            throw new NotImplementedException();
+            int id = addressDTO.Id;
+             var address = await _addressRepository.GetById(id);
+            
+            if (address == null)
+            {
+                throw new NoSuchItemInDbException("No Such Address With Given Id");
+            }
+            var userId = _tokenService.GetUidFromToken();
+            if (userId != address.CustomerId)
+            {
+                throw new UnauthorizedAccessException("User Doesnt privallge to edit the address");
+            }
+            if (addressDTO.PrimaryAdress)
+            {
+                await _addressRepository.MakePrimaryAddressFalse((int)userId);
+            }
+            address = _dtoService.MapAddressDTOToAddress(addressDTO , address);
+            address  = await _addressRepository.Update(address);
+            if(address == null)
+            {
+                throw new DbException();
+            }
+            return addressDTO; 
         }
 
         public async Task<UserReturnDTO> EditProfile(UserProfileEditDTO userProfileEditDTO)
@@ -58,6 +143,10 @@ namespace VideoStoreManagementApi.Services
             user.FirstName = userProfileEditDTO.FirstName;
             user.LastName = userProfileEditDTO.LastName;
             user = await _userRepository.Update(user);
+            if(user == null)
+            {
+                throw new DbException();
+            }
             var customer = await _customerRepository.GetById(user.Uid);
             var userReturnDTo = _dtoService.MapUserToUserReturnDTO(customer, "");
             return userReturnDTo;

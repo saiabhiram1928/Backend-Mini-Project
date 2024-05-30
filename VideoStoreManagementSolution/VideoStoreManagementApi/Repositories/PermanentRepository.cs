@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VideoStoreManagementApi.Contexts;
+using VideoStoreManagementApi.Interfaces.Repositories;
 using VideoStoreManagementApi.Models;
 
 namespace VideoStoreManagementApi.Repositories
 {
-    public class PermanentRepository:CRUDRepository<int,Permanent>
+    public class PermanentRepository:CRUDRepository<int,Permanent> , IPermanentRepository
     {
         public PermanentRepository(VideoStoreContext context) : base(context) { }
 
