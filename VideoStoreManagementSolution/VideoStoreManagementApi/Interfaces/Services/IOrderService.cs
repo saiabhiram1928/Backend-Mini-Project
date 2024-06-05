@@ -9,7 +9,14 @@ namespace VideoStoreManagementApi.Interfaces.Services
         public Task<OrderDTO> MakePayment(PaymentType paymentType, int addressId);
         public Task<IList<OrderDTO>> GetOrdersOfUser();
         public Task<OrderDTO> GetOrderById(int orderId);
-        public Task<DeliveryStatus> ChangeDeliveryStatus(int OrderId, DeliveryStatus deliveryStatus);
-        public Task<string> MarkPaymentDoneCod(int OrderId);    
+        public Task<OrderStatus> ChangeOrderStatusForAdmin(int OrderId, OrderStatus deliveryStatus);
+        public Task<MessageDTO> MarkPaymentDoneCodForAdmin(int OrderId);
+        public  Task<MessageDTO> CancelOrder(int orderId);
+        public  Task<RefundDTO> CheckRefundStatus(int orderId);
+        public Task<MessageDTO> IssuseRefundForAdmin(int orderId);
+        public  Task<IList<Refund>> ViewAllRefundsForAdmin();
+        public  Task<IList<Order>> ViewAllOrdersAreBasedOnStatusdForAdmin(OrderStatus orderStatus);
+        public  Task<Order> GetOrderbyIdForAdmin(int orderId);
+        public Task<IList<Order>> GetAllOrdersForAdmin(int pageNumber, int pageSize);
     }
 }

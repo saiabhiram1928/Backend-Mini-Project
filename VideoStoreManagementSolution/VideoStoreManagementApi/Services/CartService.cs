@@ -38,8 +38,7 @@ namespace VideoStoreManagementApi.Services
             {
                 throw new UnauthorizedUserException("Token Invalid");
             }
-                try
-                {
+            
                     Cart cart = await _cartRepository.GetByUserId((int)uid);
                     if (cart == null)
                     {
@@ -62,8 +61,9 @@ namespace VideoStoreManagementApi.Services
                     if (existingQty < presentCartItem.Qty+qty) { throw new QunatityOutOfStockException(); }
                     presentCartItem = await _cartItemsRepository.Add(presentCartItem);
                     }
-                    presentCartItem.Qty += qty;
-                    
+            if (existingQty < presentCartItem.Qty + qty) { throw new QunatityOutOfStockException(); }
+            presentCartItem.Qty += qty;
+                   
                     presentCartItem.Price = (presentCartItem.Qty) * eachVideoPrice;
                     presentCartItem = await _cartItemsRepository.Update(presentCartItem);
 
@@ -75,10 +75,7 @@ namespace VideoStoreManagementApi.Services
 
                     var cartDTO = _dTOService.MapCartToCartDTO(cart, cartItems.ToList());
                     return cartDTO;
-                }catch(Exception ex)
-                {
-                    throw new DbException(ex.Message);
-                }
+                
             
         }
 
@@ -95,7 +92,7 @@ namespace VideoStoreManagementApi.Services
                 throw new NoItemsInCartException();
             }
             var cartItems = await _cartItemsRepository.GetCartItemsWithCartId(cart.Id);
-            if (cartItems == null)
+            if (cartItems == null || cartItems.ToList().Count == 0)
             {
                 throw new NoItemsInCartException();
             }
@@ -112,6 +109,7 @@ namespace VideoStoreManagementApi.Services
                 }
                 var cart = await _cartRepository.GetByUserId((int)uid);
                 if (cart == null) throw new NoItemsInCartException();
+               
                 var cartItem = await _cartItemsRepository.GetById(cartItemId);
                 if (cartItem == null) throw new NoItemsInCartException();
                 if (cartItem.CartId != cart.Id)

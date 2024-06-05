@@ -18,7 +18,12 @@ namespace VideoStoreManagementApi.Services
 
         public TokenService(IConfiguration configuration , IHttpContextAccessor httpContextAccessor)
         {
-            _secretKey = configuration.GetSection("TokenKey").GetSection("JWT").Value.ToString();
+            _secretKey = configuration?.GetSection("TokenKey")?.GetSection("JWT")?.Value.ToString();
+            if (string.IsNullOrEmpty(_secretKey))
+            {
+                throw new NullReferenceException("JWt Secret Key is Null");
+            }
+            
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             _httpContextAccessor = httpContextAccessor;
         }

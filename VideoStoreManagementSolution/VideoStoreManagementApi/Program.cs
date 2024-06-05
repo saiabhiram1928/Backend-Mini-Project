@@ -88,6 +88,7 @@ namespace VideoStoreManagementApi
             builder.Services.AddScoped<IRentalRepository,RentalRepository>();
             builder.Services.AddScoped<IPermanentRepository,PermanentRepository>();
             builder.Services.AddScoped<IPaymentRepository,PaymentRespository>();
+            builder.Services.AddScoped<IRefundRepository,RefundRepository>();
             #endregion
             #region Services
             builder.Services.AddScoped<IHashService , HashServices>();
@@ -98,6 +99,7 @@ namespace VideoStoreManagementApi
             builder.Services.AddScoped<IUserService , UserService>();
             builder.Services.AddScoped<ICartService , CartService>();
             builder.Services.AddScoped<IOrderService , OrderService>();
+            builder.Services.AddScoped<IGeoLocationServices , GeoLocationServices>();
             #endregion
             
             var app = builder.Build();

@@ -22,7 +22,7 @@ namespace VideoStoreManagementApi.Repositories
         public async Task<int> GetQty(int id)
         {
             var item = await _context.Inventories.SingleOrDefaultAsync(i => i.VideoId == id);
-            return item.Stock;
+            return item != null ? item.Stock : 0;
         }
         public async Task<bool> UpdateStock(int qty, int videoId)
         {

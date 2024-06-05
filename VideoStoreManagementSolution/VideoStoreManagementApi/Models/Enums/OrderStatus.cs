@@ -1,10 +1,11 @@
 ﻿namespace VideoStoreManagementApi.Models.Enums
 {
-    public enum DeliveryStatus
+    public enum OrderStatus
     {
         Delivered,
         OutForDelivery,
         Shipped,
-        Transit
+        Transit,
+        Canceled
     }
 }

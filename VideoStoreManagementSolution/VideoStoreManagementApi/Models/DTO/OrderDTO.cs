@@ -13,7 +13,7 @@ namespace VideoStoreManagementApi.Models.DTO
         public float Amount { get; set; }
         public int TransactionId { get; set; }
         public PaymentType PaymentType { get; set; }
-        public DateTime PaymentDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
         public int CustomerId { get; set; }
       
         public DateTime OrderedDate { get; set; }
@@ -22,7 +22,7 @@ namespace VideoStoreManagementApi.Models.DTO
 
         public string RentalOrPermanent { get; set; }
         public bool PaymentDone { get; set; }
-        public DeliveryStatus DeliveryStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         public Address DeliveryAddress { get; set; }
         public IList<OrderItem> Items { get; set; }
      

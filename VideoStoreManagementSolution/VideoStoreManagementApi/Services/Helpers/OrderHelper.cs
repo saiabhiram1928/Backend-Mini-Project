@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using VideoStoreManagementApi.Interfaces.Services;
 using VideoStoreManagementApi.Models;
 using VideoStoreManagementApi.Models.Enums;
 
@@ -6,25 +7,9 @@ namespace VideoStoreManagementApi.Services.Helpers
 {
     public class OrderHelper
     {
-        //public int Id { get; set; }
-        //public int CustomerId { get; set; }
-        //[ForeignKey(nameof(CustomerId))]
-        //public Customer Customer { get; set; }
-        //public DateTime OrderedDate { get; set; }
-        //public DateTime ExpectedDeliveryDate { get; set; }
-        //public DateTime? RealDeliveredDate { get; set; }
-        //public int DeliveryAddressId { get; set; }
-        //[ForeignKey(nameof(DeliveryAddressId))]
-        //public Address DeliveryAddress { get; set; }
-        //public string RentalOrPermanent { get; set; }
-        //public bool PaymentDone { get; set; }
-
-        //public ICollection<OrderItem> OrderItems { get; set; }
-        //public ICollection<Payment> Payments { get; set; }
-
-        //public Permanent Permanent { get; set; }
-        //public Rental Rental { get; set; }
-        public static Order CreateOrder(int customerId , int addressId, PaymentType paymentType,MembershipType membershipType)
+        
+        
+        public static async Task<Order> CreateOrder(int customerId , int addressId, PaymentType paymentType,MembershipType membershipType)
         {
             Order order = new Order();
             order.CustomerId = customerId;
@@ -33,8 +18,8 @@ namespace VideoStoreManagementApi.Services.Helpers
             order.PaymentDone = false;
             order.DeliveryAddressId = addressId;
             order.PaymentType = paymentType;
-            order.RentalOrPermanent = membershipType == MembershipType.Basic ? MembershipType.Basic.ToString() : MembershipType.Premium.ToString() ;
-            order.DeliveryStatus = DeliveryStatus.Shipped;
+            order.RentalOrPermanent = membershipType == MembershipType.Basic ? "Rental": "Permanent" ;
+            order.OrderStatus = OrderStatus.Shipped;
             return order;
         }
         public static int GenerateTransactionId()
@@ -45,5 +30,17 @@ namespace VideoStoreManagementApi.Services.Helpers
             int transactionId = guid.GetHashCode();
             return transactionId;
         }
+
+        public static  async Task<DateTime> SetExceptedDeliveryDate(Address address , IGeoLocationServices geoLocationServices)
+        {
+            string source  = "zp center, Wyra Rd, Yedulapuram, Khammam, Telangana 507002";
+            string destination = $"{address.Area} ,{address.City} , {address.State} ,  {address.Zipcode}";
+            var distance =   await geoLocationServices.GetDistanceAsync(source, destination);
+            const double deliverySpeedPerDay = 40 * 1000; 
+            int daysRequired = (int)Math.Ceiling(distance / deliverySpeedPerDay);
+
+            return DateTime.Now.AddDays(daysRequired);
+        }
+
     }
 }

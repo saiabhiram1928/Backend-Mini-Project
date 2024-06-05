@@ -12,8 +12,6 @@ namespace VideoStoreManagementApi.Services.Helpers
             Cart cart = new Cart() { CustomerId = (int)uid };
            
             return cart;
-
-
         }
         public CartItem CreateCartItem(int videoId, int cartId)
         {

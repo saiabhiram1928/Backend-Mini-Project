@@ -53,6 +53,7 @@ namespace VideoStoreManagementApi.Repositories
         {
             var video = await _context.Videos.
                 SingleOrDefaultAsync(v => v.Id == id);
+            if (video == null) throw new NullReferenceException("No Such Video Exist");
             return video.Price;
         }
     }

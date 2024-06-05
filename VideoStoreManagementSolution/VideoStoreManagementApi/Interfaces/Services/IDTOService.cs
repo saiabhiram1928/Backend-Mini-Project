@@ -16,5 +16,6 @@ namespace VideoStoreManagementApi.Interfaces.Services
 
         public CartDTO MapCartToCartDTO(Cart cart, IList<CartItem> cartItems);
         public VideoDTO MapVideoToVideoDTO(Video video, int stock);
+        public RefundDTO MapRefundToRefundDTO(Refund refund);
     }
 }

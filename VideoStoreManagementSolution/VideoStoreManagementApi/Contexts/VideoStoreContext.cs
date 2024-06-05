@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using VideoStoreManagementApi.Models;
@@ -21,6 +22,7 @@ namespace VideoStoreManagementApi.Contexts
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Permanent> Permanents { get; set; }
         public DbSet<Rental> Rentals { get; set; }
+        public DbSet<Refund> Refunds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -120,6 +122,16 @@ namespace VideoStoreManagementApi.Contexts
                       .IsUnique();
 
             });
+
+            //Email is unique
+            modelBuilder.Entity<User>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
+            //Video Tittle is unique
+            modelBuilder.Entity<Video>()
+               .HasIndex(u => u.Tittle)
+               .IsUnique();
+
             // Video - Genre as Enum
             modelBuilder.Entity<Video>()
                 .Property(v => v.Genre)
@@ -130,9 +142,9 @@ namespace VideoStoreManagementApi.Contexts
                 .Property(o => o.PaymentType)
                 .HasConversion<string>();
             
-            //Order-DeliveryStatus as Enum
+            //Order-OrderStatusStatus as Enum
             modelBuilder.Entity<Order>()
-                .Property(o => o.DeliveryStatus)
+                .Property(o => o.OrderStatus)
                 .HasConversion<string>();
 
             // User - Role as Enum
@@ -243,7 +255,12 @@ namespace VideoStoreManagementApi.Contexts
                 .WithOne(o => o.Rental)
                 .HasForeignKey<Rental>(r => r.OrderId)
                 .OnDelete(DeleteBehavior.Restrict);
-
+            
+            //Refund && Order - Foreignkey 1-1
+            modelBuilder.Entity<Order>()
+              .HasOne(o => o.Refund)
+              .WithOne(r => r.Order)
+              .HasForeignKey<Refund>(r => r.OrderId);
         }
 
     }

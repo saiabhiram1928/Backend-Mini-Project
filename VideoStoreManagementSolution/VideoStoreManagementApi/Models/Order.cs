@@ -20,13 +20,14 @@ namespace VideoStoreManagementApi.Models
         public string RentalOrPermanent { get; set; }
         public bool PaymentDone { get; set; }
 
-        public DeliveryStatus DeliveryStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         public PaymentType PaymentType { get; set; }
         public float TotalAmount { get; set; }  
         public ICollection<OrderItem> OrderItems { get; set; } 
         public ICollection<Payment> Payments { get; set; }
         public Permanent Permanent { get; set; }
         public Rental Rental { get; set; }
+        public Refund Refund { get; set; }
 
 
     }

@@ -1,8 +1,12 @@
-﻿namespace VideoStoreManagementApi.Models.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VideoStoreManagementApi.Models.DTO
 {
     public class ErrorDTO
     {
-        public int ErrorCode { get; set; }  
+        [Required]
+        public int ErrorCode { get; set; }
+        [Required]
         public string Message { get; set; } =string.Empty;
         public ErrorDTO(int errorCode, string message)
         {

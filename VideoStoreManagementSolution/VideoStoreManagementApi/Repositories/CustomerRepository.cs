@@ -26,6 +26,7 @@ namespace VideoStoreManagementApi.Repositories
         public async Task<MembershipType> GetMembershipType(int id)
         {
             var item = await _context.Customers.SingleOrDefaultAsync(c => c.Uid == id);
+            if (item == null) throw new NullReferenceException("User with given Id Doenst Exist");
             return item.MembershipType;
 
         }

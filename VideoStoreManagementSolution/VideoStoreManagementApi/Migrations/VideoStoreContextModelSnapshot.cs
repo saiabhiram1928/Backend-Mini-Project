@@ -214,13 +214,13 @@ namespace VideoStoreManagementApi.Migrations
                         new
                         {
                             VideoId = 1,
-                            LastUpdate = new DateTime(2024, 5, 28, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5789),
+                            LastUpdate = new DateTime(2024, 5, 30, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(713),
                             Stock = 10
                         },
                         new
                         {
                             VideoId = 2,
-                            LastUpdate = new DateTime(2024, 5, 27, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5800),
+                            LastUpdate = new DateTime(2024, 5, 29, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(719),
                             Stock = 5
                         });
                 });
@@ -239,12 +239,12 @@ namespace VideoStoreManagementApi.Migrations
                     b.Property<int>("DeliveryAddressId")
                         .HasColumnType("int");
 
-                    b.Property<string>("DeliveryStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("ExpectedDeliveryDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OrderedDate")
                         .HasColumnType("datetime2");
@@ -280,9 +280,9 @@ namespace VideoStoreManagementApi.Migrations
                             Id = 1,
                             CustomerId = 101,
                             DeliveryAddressId = 1,
-                            DeliveryStatus = "Delivered",
-                            ExpectedDeliveryDate = new DateTime(2024, 6, 3, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5878),
-                            OrderedDate = new DateTime(2024, 5, 19, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5877),
+                            ExpectedDeliveryDate = new DateTime(2024, 6, 5, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(776),
+                            OrderStatus = "Delivered",
+                            OrderedDate = new DateTime(2024, 5, 21, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(775),
                             PaymentDone = true,
                             PaymentType = "COD",
                             RentalOrPermanent = "Rental",
@@ -293,9 +293,9 @@ namespace VideoStoreManagementApi.Migrations
                             Id = 2,
                             CustomerId = 102,
                             DeliveryAddressId = 2,
-                            DeliveryStatus = "Delivered",
-                            ExpectedDeliveryDate = new DateTime(2024, 6, 8, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5882),
-                            OrderedDate = new DateTime(2024, 5, 9, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5881),
+                            ExpectedDeliveryDate = new DateTime(2024, 6, 10, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(780),
+                            OrderStatus = "Delivered",
+                            OrderedDate = new DateTime(2024, 5, 11, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(779),
                             PaymentDone = false,
                             PaymentType = "COD",
                             RentalOrPermanent = "Permanent",
@@ -417,6 +417,34 @@ namespace VideoStoreManagementApi.Migrations
                         });
                 });
 
+            modelBuilder.Entity("VideoStoreManagementApi.Models.Refund", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<float>("Amount")
+                        .HasColumnType("real");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TranasactionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.ToTable("Refunds");
+                });
+
             modelBuilder.Entity("VideoStoreManagementApi.Models.Rental", b =>
                 {
                     b.Property<int>("Id")
@@ -457,11 +485,11 @@ namespace VideoStoreManagementApi.Migrations
                         new
                         {
                             Id = 1,
-                            DueDate = new DateTime(2024, 5, 30, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5965),
+                            DueDate = new DateTime(2024, 6, 1, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(904),
                             LateFee = 0f,
                             OrderId = 1,
-                            RentDate = new DateTime(2024, 5, 20, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5964),
-                            ReturnDate = new DateTime(2024, 5, 29, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5966),
+                            RentDate = new DateTime(2024, 5, 22, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(902),
+                            ReturnDate = new DateTime(2024, 5, 31, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(907),
                             TotalPrice = 19.99f,
                             TotalQty = 1
                         });
@@ -477,7 +505,7 @@ namespace VideoStoreManagementApi.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -504,6 +532,9 @@ namespace VideoStoreManagementApi.Migrations
 
                     b.HasKey("Uid");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
 
                     b.HasData(
@@ -513,9 +544,9 @@ namespace VideoStoreManagementApi.Migrations
                             Email = "test1@gmail.com",
                             FirstName = "test1",
                             LastName = "test",
-                            Password = new byte[] { 153, 150, 74, 224, 74, 10, 127, 102, 234, 155, 57, 88, 13, 9, 163, 195, 113, 54, 34, 131, 14, 102, 226, 248, 90, 67, 49, 188, 143, 165, 125, 6, 36, 121, 193, 132, 154, 36, 8, 242, 237, 51, 207, 121, 168, 215, 192, 27, 130, 204, 125, 202, 235, 4, 142, 229, 41, 75, 213, 197, 64, 77, 15, 204 },
+                            Password = new byte[] { 103, 34, 118, 72, 75, 37, 15, 240, 69, 235, 197, 41, 237, 21, 211, 0, 80, 202, 67, 89, 96, 153, 25, 140, 196, 72, 128, 99, 181, 239, 100, 15, 232, 137, 234, 178, 52, 179, 104, 154, 113, 116, 33, 76, 17, 101, 205, 56, 102, 186, 191, 56, 57, 91, 18, 19, 10, 48, 38, 211, 150, 49, 184, 103 },
                             Role = "Customer",
-                            Salt = new byte[] { 232, 109, 251, 181, 20, 70, 62, 189, 63, 174, 198, 20, 176, 68, 236, 95, 5, 97, 231, 85, 220, 87, 101, 123, 255, 171, 200, 178, 156, 249, 162, 128, 211, 13, 228, 30, 173, 80, 198, 36, 49, 3, 136, 87, 77, 116, 196, 61, 109, 126, 144, 160, 82, 73, 21, 253, 77, 38, 16, 157, 139, 120, 98, 177, 91, 229, 115, 178, 207, 64, 182, 139, 6, 228, 207, 21, 79, 225, 31, 4, 166, 72, 5, 204, 160, 0, 67, 77, 82, 20, 121, 42, 33, 57, 127, 151, 218, 222, 200, 101, 93, 5, 225, 143, 167, 141, 187, 247, 95, 22, 85, 168, 198, 211, 63, 68, 227, 21, 239, 197, 9, 10, 212, 96, 114, 167, 224, 242 },
+                            Salt = new byte[] { 18, 251, 22, 234, 59, 85, 119, 54, 212, 247, 106, 249, 173, 196, 78, 63, 184, 27, 38, 64, 25, 173, 85, 139, 129, 26, 93, 222, 98, 95, 42, 105, 147, 13, 116, 143, 115, 184, 166, 114, 17, 85, 75, 252, 229, 131, 183, 222, 49, 234, 249, 24, 102, 194, 223, 216, 118, 206, 94, 59, 233, 90, 155, 52, 90, 20, 248, 58, 242, 203, 2, 163, 187, 252, 31, 144, 227, 80, 131, 143, 76, 145, 252, 255, 85, 68, 23, 212, 197, 2, 132, 108, 165, 40, 194, 38, 117, 14, 242, 67, 183, 63, 101, 57, 153, 127, 88, 49, 171, 132, 70, 110, 233, 93, 214, 54, 33, 211, 93, 133, 237, 152, 19, 171, 122, 38, 112, 182 },
                             Verified = true
                         },
                         new
@@ -524,9 +555,9 @@ namespace VideoStoreManagementApi.Migrations
                             Email = "test2@gmail.com",
                             FirstName = "test2",
                             LastName = "test",
-                            Password = new byte[] { 153, 150, 74, 224, 74, 10, 127, 102, 234, 155, 57, 88, 13, 9, 163, 195, 113, 54, 34, 131, 14, 102, 226, 248, 90, 67, 49, 188, 143, 165, 125, 6, 36, 121, 193, 132, 154, 36, 8, 242, 237, 51, 207, 121, 168, 215, 192, 27, 130, 204, 125, 202, 235, 4, 142, 229, 41, 75, 213, 197, 64, 77, 15, 204 },
+                            Password = new byte[] { 103, 34, 118, 72, 75, 37, 15, 240, 69, 235, 197, 41, 237, 21, 211, 0, 80, 202, 67, 89, 96, 153, 25, 140, 196, 72, 128, 99, 181, 239, 100, 15, 232, 137, 234, 178, 52, 179, 104, 154, 113, 116, 33, 76, 17, 101, 205, 56, 102, 186, 191, 56, 57, 91, 18, 19, 10, 48, 38, 211, 150, 49, 184, 103 },
                             Role = "Customer",
-                            Salt = new byte[] { 232, 109, 251, 181, 20, 70, 62, 189, 63, 174, 198, 20, 176, 68, 236, 95, 5, 97, 231, 85, 220, 87, 101, 123, 255, 171, 200, 178, 156, 249, 162, 128, 211, 13, 228, 30, 173, 80, 198, 36, 49, 3, 136, 87, 77, 116, 196, 61, 109, 126, 144, 160, 82, 73, 21, 253, 77, 38, 16, 157, 139, 120, 98, 177, 91, 229, 115, 178, 207, 64, 182, 139, 6, 228, 207, 21, 79, 225, 31, 4, 166, 72, 5, 204, 160, 0, 67, 77, 82, 20, 121, 42, 33, 57, 127, 151, 218, 222, 200, 101, 93, 5, 225, 143, 167, 141, 187, 247, 95, 22, 85, 168, 198, 211, 63, 68, 227, 21, 239, 197, 9, 10, 212, 96, 114, 167, 224, 242 },
+                            Salt = new byte[] { 18, 251, 22, 234, 59, 85, 119, 54, 212, 247, 106, 249, 173, 196, 78, 63, 184, 27, 38, 64, 25, 173, 85, 139, 129, 26, 93, 222, 98, 95, 42, 105, 147, 13, 116, 143, 115, 184, 166, 114, 17, 85, 75, 252, 229, 131, 183, 222, 49, 234, 249, 24, 102, 194, 223, 216, 118, 206, 94, 59, 233, 90, 155, 52, 90, 20, 248, 58, 242, 203, 2, 163, 187, 252, 31, 144, 227, 80, 131, 143, 76, 145, 252, 255, 85, 68, 23, 212, 197, 2, 132, 108, 165, 40, 194, 38, 117, 14, 242, 67, 183, 63, 101, 57, 153, 127, 88, 49, 171, 132, 70, 110, 233, 93, 214, 54, 33, 211, 93, 133, 237, 152, 19, 171, 122, 38, 112, 182 },
                             Verified = true
                         },
                         new
@@ -535,9 +566,9 @@ namespace VideoStoreManagementApi.Migrations
                             Email = "admin@gmail.com",
                             FirstName = "admin",
                             LastName = "admin",
-                            Password = new byte[] { 134, 119, 227, 112, 243, 138, 127, 206, 71, 70, 247, 40, 11, 124, 144, 188, 254, 98, 117, 205, 49, 60, 27, 67, 82, 18, 166, 80, 61, 14, 177, 150, 60, 94, 82, 241, 150, 133, 80, 114, 38, 90, 5, 108, 4, 248, 102, 237, 233, 226, 106, 1, 89, 143, 250, 0, 119, 77, 50, 164, 60, 45, 80, 78 },
+                            Password = new byte[] { 56, 153, 100, 118, 110, 21, 181, 58, 191, 191, 225, 209, 26, 250, 184, 99, 170, 54, 211, 192, 140, 101, 34, 51, 67, 122, 129, 246, 134, 195, 148, 71, 255, 57, 43, 190, 237, 92, 100, 222, 184, 106, 231, 76, 202, 197, 15, 88, 130, 244, 39, 135, 39, 114, 234, 53, 109, 23, 169, 34, 45, 40, 86, 17 },
                             Role = "Admin",
-                            Salt = new byte[] { 232, 109, 251, 181, 20, 70, 62, 189, 63, 174, 198, 20, 176, 68, 236, 95, 5, 97, 231, 85, 220, 87, 101, 123, 255, 171, 200, 178, 156, 249, 162, 128, 211, 13, 228, 30, 173, 80, 198, 36, 49, 3, 136, 87, 77, 116, 196, 61, 109, 126, 144, 160, 82, 73, 21, 253, 77, 38, 16, 157, 139, 120, 98, 177, 91, 229, 115, 178, 207, 64, 182, 139, 6, 228, 207, 21, 79, 225, 31, 4, 166, 72, 5, 204, 160, 0, 67, 77, 82, 20, 121, 42, 33, 57, 127, 151, 218, 222, 200, 101, 93, 5, 225, 143, 167, 141, 187, 247, 95, 22, 85, 168, 198, 211, 63, 68, 227, 21, 239, 197, 9, 10, 212, 96, 114, 167, 224, 242 },
+                            Salt = new byte[] { 18, 251, 22, 234, 59, 85, 119, 54, 212, 247, 106, 249, 173, 196, 78, 63, 184, 27, 38, 64, 25, 173, 85, 139, 129, 26, 93, 222, 98, 95, 42, 105, 147, 13, 116, 143, 115, 184, 166, 114, 17, 85, 75, 252, 229, 131, 183, 222, 49, 234, 249, 24, 102, 194, 223, 216, 118, 206, 94, 59, 233, 90, 155, 52, 90, 20, 248, 58, 242, 203, 2, 163, 187, 252, 31, 144, 227, 80, 131, 143, 76, 145, 252, 255, 85, 68, 23, 212, 197, 2, 132, 108, 165, 40, 194, 38, 117, 14, 242, 67, 183, 63, 101, 57, 153, 127, 88, 49, 171, 132, 70, 110, 233, 93, 214, 54, 33, 211, 93, 133, 237, 152, 19, 171, 122, 38, 112, 182 },
                             Verified = true
                         });
                 });
@@ -570,9 +601,12 @@ namespace VideoStoreManagementApi.Migrations
 
                     b.Property<string>("Tittle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Tittle")
+                        .IsUnique();
 
                     b.ToTable("Videos");
 
@@ -584,7 +618,7 @@ namespace VideoStoreManagementApi.Migrations
                             Director = "Director 1",
                             Genre = "Action",
                             Price = 19.99f,
-                            ReleaseDate = new DateTime(2023, 5, 29, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5734),
+                            ReleaseDate = new DateTime(2023, 5, 31, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(665),
                             Tittle = "Action Movie"
                         },
                         new
@@ -594,7 +628,7 @@ namespace VideoStoreManagementApi.Migrations
                             Director = "Director 2",
                             Genre = "Comedy",
                             Price = 14.99f,
-                            ReleaseDate = new DateTime(2022, 5, 29, 23, 46, 26, 935, DateTimeKind.Local).AddTicks(5759),
+                            ReleaseDate = new DateTime(2022, 5, 31, 10, 52, 15, 540, DateTimeKind.Local).AddTicks(688),
                             Tittle = "Comedy Movie"
                         });
                 });
@@ -722,6 +756,17 @@ namespace VideoStoreManagementApi.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("VideoStoreManagementApi.Models.Refund", b =>
+                {
+                    b.HasOne("VideoStoreManagementApi.Models.Order", "Order")
+                        .WithOne("Refund")
+                        .HasForeignKey("VideoStoreManagementApi.Models.Refund", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("VideoStoreManagementApi.Models.Rental", b =>
                 {
                     b.HasOne("VideoStoreManagementApi.Models.Order", "Order")
@@ -752,6 +797,9 @@ namespace VideoStoreManagementApi.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("Permanent")
+                        .IsRequired();
+
+                    b.Navigation("Refund")
                         .IsRequired();
 
                     b.Navigation("Rental")

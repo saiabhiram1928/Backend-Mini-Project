@@ -14,8 +14,8 @@ namespace VideoStoreManagementApi.Services
                 DeliveryAddress = address,
                 Items = orderItems,
                 CustomerId = order.CustomerId,
-                DeliveryStatus
-                = order.DeliveryStatus,
+                OrderStatus
+                = order.OrderStatus,
                 ExpectedDeliveryDate = order.ExpectedDeliveryDate,
                 OrderedDate = order.OrderedDate,
                 OrderId = order.Id,
@@ -142,6 +142,17 @@ namespace VideoStoreManagementApi.Services
 
             return videoDTO;
            
+        }
+
+        public RefundDTO MapRefundToRefundDTO(Refund refund)
+        {
+            RefundDTO refundDTO = new RefundDTO();
+            refundDTO.OrderId = refund.OrderId;
+            refundDTO.TranasactionId = refund.TranasactionId;
+            refundDTO.Amount = refund.Amount;
+            refundDTO.Status = refund.Status;
+            refundDTO.Id = refund.Id;
+            return refundDTO;
         }
     }
 }
