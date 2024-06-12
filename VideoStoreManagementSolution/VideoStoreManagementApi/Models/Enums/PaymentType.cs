@@ -2,7 +2,7 @@
 {
     public enum PaymentType
     {
-        COD,
-        UPI
+       UPI,
+       COD
     }
 }

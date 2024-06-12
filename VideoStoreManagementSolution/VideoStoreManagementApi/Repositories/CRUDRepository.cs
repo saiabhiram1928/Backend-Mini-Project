@@ -14,6 +14,7 @@ namespace VideoStoreManagementApi.Repositories
         }
         public async Task<T> Add(T item)
         {
+            if (item == null) return null;
             
             try
             {

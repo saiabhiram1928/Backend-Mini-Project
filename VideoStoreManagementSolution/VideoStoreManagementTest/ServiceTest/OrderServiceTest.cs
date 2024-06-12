@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
 using System;
@@ -118,22 +119,23 @@ namespace VideoStoreManagementTest.ServiceTest
             _cartItemsRepositoryMock.Setup(ci => ci.GetCartItemsWithCartId(It.IsAny<int>())).ReturnsAsync(new List<CartItem> { _testCartItem }); // Mock cart items repository
             _addressRepositoryMock.Setup(a => a.CheckAddressIsOfUser(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true); // Mock address repository
             _customerRepositoryMock.Setup(c => c.GetMembershipType(It.IsAny<int>())).ReturnsAsync(MembershipType.Basic); // Mock customer repository
-            _orderRepositoryMock.Setup(o => o.Add(It.IsAny<Order>())).ReturnsAsync(new Order { Id = 1, CustomerId = 1, DeliveryAddressId =1, ExpectedDeliveryDate =DateTime.Now.AddDays(7) , OrderedDate =DateTime.Now , OrderStatus = OrderStatus.Shipped, PaymentType = PaymentType.UPI }); // Mock order repository
-            _paymentRepositoryMock.Setup(p => p.Add(It.IsAny<Payment>())).ReturnsAsync(new Payment { Id = 1 , TransactionId = 12345678, Amount = _testCart.TotalPrice, OrderId = 1, PaymentDate = DateTime.Now , PaymentSucess = true }); // Mock payment repository
+            _orderRepositoryMock.Setup(o => o.Add(It.IsAny<Order>())).ReturnsAsync(new Order { Id = 1, CustomerId = 1, DeliveryAddressId = 1, ExpectedDeliveryDate = DateTime.Now.AddDays(7), OrderedDate = DateTime.Now, OrderStatus = OrderStatus.Shipped, PaymentType = PaymentType.UPI }); // Mock order repository
+            _paymentRepositoryMock.Setup(p => p.Add(It.IsAny<Payment>())).ReturnsAsync(new Payment { Id = 1, TransactionId = 12345678, Amount = _testCart.TotalPrice, OrderId = 1, PaymentDate = DateTime.Now, PaymentSucess = true }); // Mock payment repository
             _orderRepositoryMock.Setup(o => o.Update(It.IsAny<Order>())).ReturnsAsync(new Order { Id = 1, PaymentDone = true }); // Mock order repository update
             _rentalRepositoryMock.Setup(r => r.Add(It.IsAny<Rental>())).ReturnsAsync(new Rental { Id = 1 }); // Mock rental repository
             _inventoryRepositoryMock.Setup(i => i.GetById(It.IsAny<int>())).ReturnsAsync(new Inventory { VideoId = 1, Stock = 10 }); // Mock inventory repository
             _orderItemRepositoryMock.Setup(o => o.Add(It.IsAny<OrderItem>())).ReturnsAsync(new OrderItem { Id = 1 }); // Mock order item repository
             _cartItemsRepositoryMock.Setup(ci => ci.Delete(It.IsAny<int>())).ReturnsAsync(true); // Mock cart items repository delete
             _cartRepositoryMock.Setup(c => c.Delete(It.IsAny<int>())).ReturnsAsync(true); // Mock cart repository delete
-            _addressRepositoryMock.Setup(a => a.GetById(It.IsAny<int>())).ReturnsAsync(new Address { 
-                 Id = 1,
-                 Area = "test",
-                 PrimaryAdress = true,
-                  City = "test",
-                  State = "test",
-                   CustomerId = 1,
-                    Zipcode = 12345
+            _addressRepositoryMock.Setup(a => a.GetById(It.IsAny<int>())).ReturnsAsync(new Address
+            {
+                Id = 1,
+                Area = "test",
+                PrimaryAdress = true,
+                City = "test",
+                State = "test",
+                CustomerId = 1,
+                Zipcode = 12345
             }); // Mock address repository
             _dtoServiceMock.Setup(dto => dto.MapOrderToOrderDTO(
            It.IsAny<Order>(), It.IsAny<IList<OrderItem>>(), It.IsAny<Address>(), It.IsAny<Payment?>()))
@@ -149,13 +151,12 @@ namespace VideoStoreManagementTest.ServiceTest
                PaymentDate = DateTime.UtcNow,
                OrderedDate = DateTime.UtcNow,
                ExpectedDeliveryDate = DateTime.Now.AddDays(7),
-               OrderId =1 ,
-           }) ;
+               OrderId = 1,
+           });
             _inventoryRepositoryMock.Setup(i => i.GetQty(It.IsAny<int>())).ReturnsAsync(10);
-            
-            
-        }
 
+
+        }
         [TearDown]
         public void TearDown()
         {
@@ -527,6 +528,35 @@ namespace VideoStoreManagementTest.ServiceTest
             // Act + Assert
             Assert.ThrowsAsync<ArgumentException>(async () => await _orderService.GetAllOrdersForAdmin(pageNumber, pageSize));
         }
+        //[Test]
+        //public async Task MakePayment_ShouldCommitTransaction_WhenPaymentIsSuccessful()
+        //{
+        //    // Arrange
+        //    var uid = 1;
+        //    var addressId = 1;
+        //    var paymentType = PaymentType.UPI;
+        //    var membershipType = MembershipType.Basic;
 
+        //    var cart = new Cart { Id = 1, CustomerId = uid, TotalPrice = 100 };
+        //    var cartItems = new List<CartItem>
+        //    {
+        //        new CartItem { Id = 1, CartId = 1, VideoId = 1, Qty = 2, Price = 50 },
+        //        new CartItem { Id = 2, CartId = 1, VideoId = 2, Qty = 1, Price = 50 }
+        //    };
+
+        //    _tokenServiceMock.Setup(t => t.GetUidFromToken()).Returns(uid);
+        //    _cartRepositoryMock.Setup(c => c.GetByUserId(uid)).ReturnsAsync(cart);
+        //    _cartItemsRepositoryMock.Setup(c => c.GetCartItemsWithCartId(cart.Id)).ReturnsAsync(cartItems);
+        //    _addressRepositoryMock.Setup(a => a.CheckAddressIsOfUser(uid, addressId)).ReturnsAsync(true);
+        //    _customerRepositoryMock.Setup(c => c.GetMembershipType(uid)).ReturnsAsync(membershipType);
+        //    _inventoryRepositoryMock.Setup(i => i.GetQty(It.IsAny<int>())).ReturnsAsync(5);
+        //    _dtoServiceMock.Setup(d => d.MapOrderToOrderDTO(It.IsAny<Order>(), It.IsAny<List<OrderItem>>(), It.IsAny<Address>(), It.IsAny<Payment>())).Returns(new OrderDTO());
+
+        //    // Act
+        //    var result = await _orderService.MakePayment(paymentType, addressId);
+
+        //    // Assert
+        //    _transactionMock.Verify(t => t.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        //}
     }
 }

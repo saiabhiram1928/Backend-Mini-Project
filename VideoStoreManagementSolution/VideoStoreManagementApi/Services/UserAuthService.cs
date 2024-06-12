@@ -14,6 +14,7 @@ namespace VideoStoreManagementApi.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly ITokenService _tokenService;
 
+        #region Constructor
         public UserAuthService(IUserRepository userRepository , IHashService hashService, IDTOService dtoService ,ICustomerRepository customerRepository , ITokenService tokenService)
         {
             _userRepository = userRepository;
@@ -22,7 +23,16 @@ namespace VideoStoreManagementApi.Services
             _customerRepository = customerRepository;
             _tokenService = tokenService;
         }
+        #endregion
 
+        #region Login
+        /// <summary>
+        /// Validates User Credentials and login user
+        /// </summary>
+        /// <param name="userDTO"></param>
+        /// <returns>UserReturnDTO</returns>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="UnauthorizedUserException"></exception>
         public async Task<UserReturnDTO> Login(UserLoginDTO userDTO)
         {
             var user = await _userRepository.GetUserByEmail(userDTO.Email);
@@ -41,7 +51,17 @@ namespace VideoStoreManagementApi.Services
             var userReturnDTO = _dtoService.MapUserToUserReturnDTO(customer, token);
             return userReturnDTO;
         }
-       public async Task<UserReturnDTO> Register(UserRegisterDTO userRegisterDTO)
+        #endregion
+
+        #region Register
+        /// <summary>
+        /// Register user and validates credentials
+        /// </summary>
+        /// <param name="userRegisterDTO"></param>
+        /// <returns>UserReturnDTO</returns>
+        /// <exception cref="DuplicateItemException"></exception>
+        /// <exception cref="DbException"></exception>
+        public async Task<UserReturnDTO> Register(UserRegisterDTO userRegisterDTO)
         {
             var userCheck = await _userRepository.CheckUserExist(userRegisterDTO.Email);
             if (userCheck)
@@ -63,5 +83,6 @@ namespace VideoStoreManagementApi.Services
             var userReturnDTO = _dtoService.MapUserToUserReturnDTO(customer,token);
             return userReturnDTO;
         }
+        #endregion
     }
 }

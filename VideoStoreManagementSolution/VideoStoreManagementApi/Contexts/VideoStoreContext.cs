@@ -23,6 +23,7 @@ namespace VideoStoreManagementApi.Contexts
         public DbSet<Permanent> Permanents { get; set; }
         public DbSet<Rental> Rentals { get; set; }
         public DbSet<Refund> Refunds { get; set; }
+        public DbSet<Coupoun> Coupons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -111,6 +112,52 @@ namespace VideoStoreManagementApi.Contexts
                 new Customer { Uid = 102, MembershipType = MembershipType.Premium },
                 new Customer { Uid = 100, MembershipType = MembershipType.Premium }
                 );
+            //modelBuilder.Entity<Coupoun>().HasData(
+            //      new Coupoun
+            //      {
+            //          CouponCode = "WELCOME10",
+            //          DiscountType = DiscountType.Fixed,
+            //          DiscountValue = 50,
+            //          ExpirationDate = new DateTime(2024, 12, 31),
+            //          UsageLimit = 100,
+            //          TimesUsed = 0,
+            //          MinimumPurchaseAmount = 0.00m,
+            //          Status = CoupounStatus.Active,
+            //      },
+            //        new Coupoun
+            //        {
+            //            CouponCode = "SAVE20",
+            //            DiscountType = DiscountType.Percentage,
+            //            DiscountValue = 0.2f,
+            //            ExpirationDate = new DateTime(2024, 6, 30),
+            //            UsageLimit = 50,
+            //            TimesUsed = 10,
+            //            MinimumPurchaseAmount = 50.00m,
+            //            Status = CoupounStatus.Active
+            //        },
+            //        new Coupoun
+            //        {
+            //            CouponCode = "SUMMER50",
+            //            DiscountType = DiscountType.Percentage,
+            //            DiscountValue = 0.5f,
+            //            ExpirationDate = new DateTime(2024, 9, 30),
+            //            UsageLimit = 200,
+            //            TimesUsed = 100,
+            //            MinimumPurchaseAmount = 100.00m,
+            //            Status = CoupounStatus.Expired
+            //        },
+            //        new Coupoun
+            //        {
+            //            CouponCode = "HOLIDAY25",
+            //            DiscountType = DiscountType.Fixed,
+            //            DiscountValue = 25.00f,
+            //            ExpirationDate = new DateTime(2024, 12, 25),
+            //            UsageLimit = 30,
+            //            TimesUsed = 5,
+            //            MinimumPurchaseAmount = 75.00m,
+            //            Status = CoupounStatus.Expired,
+            //        }
+            //    ); 
 
             // Ensure TransactionId is required if necessary
             modelBuilder.Entity<Payment>(entity =>

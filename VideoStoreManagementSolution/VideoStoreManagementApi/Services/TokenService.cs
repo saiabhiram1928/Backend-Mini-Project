@@ -16,6 +16,7 @@ namespace VideoStoreManagementApi.Services
         private SymmetricSecurityKey _key;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        #region Constructor
         public TokenService(IConfiguration configuration , IHttpContextAccessor httpContextAccessor)
         {
             _secretKey = configuration?.GetSection("TokenKey")?.GetSection("JWT")?.Value.ToString();
@@ -27,6 +28,14 @@ namespace VideoStoreManagementApi.Services
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             _httpContextAccessor = httpContextAccessor;
         }
+        #endregion
+
+        #region GenerateToken
+        /// <summary>
+        /// Generates based on User credentials
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Token in string data type</returns>
         public string GenerateToken(User user)
         {
             var claim = new List<Claim>() {
@@ -45,6 +54,13 @@ namespace VideoStoreManagementApi.Services
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        #endregion
+
+        #region GetUidFromToken
+        /// <summary>
+        /// Extract User Id from Token
+        /// </summary>
+        /// <returns>User Id in Interger Format</returns>
         public int? GetUidFromToken()
         {
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst("eid")?.Value;
@@ -54,5 +70,6 @@ namespace VideoStoreManagementApi.Services
             }
             return null;
         }
+        #endregion
     }
 }

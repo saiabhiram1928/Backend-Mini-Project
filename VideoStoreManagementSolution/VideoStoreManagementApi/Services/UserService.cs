@@ -16,6 +16,7 @@ namespace VideoStoreManagementApi.Services
         private readonly IAddressRepository _addressRepository;
         private readonly IHashService _hashService;
 
+        #region Constructor
         public UserService(ITokenService tokenService , ICustomerRepository customerRepository , IUserRepository userRepository, IDTOService dTOService  , IAddressRepository addressRepository,IHashService hashService) 
         {
             _tokenService = tokenService;
@@ -25,6 +26,18 @@ namespace VideoStoreManagementApi.Services
             _addressRepository = addressRepository; 
             _hashService = hashService;
         }
+        #endregion
+
+
+        #region AddAddress
+        /// <summary>
+        /// Add Address to Database
+        /// </summary>
+        /// <param name="addressRegisterDTO"></param>
+        /// <returns>AddressDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<AddressDTO> AddAddress(AddressRegisterDTO addressRegisterDTO)
         {
             var addressDTO = _dtoService.MapAddressRegisterDTOTOAddressDTO(addressRegisterDTO);
@@ -52,7 +65,19 @@ namespace VideoStoreManagementApi.Services
             return addressDTOReturn;
             
         }
+        #endregion
 
+        #region ChangePassword
+        /// <summary>
+        /// Changes Password of User
+        /// </summary>
+        /// <param name="newPasswd"></param>
+        /// <param name="oldPasswd"></param>
+        /// <returns>If Sucess Returns a Message "Sucessfully Updated Password" </returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<string> ChangePassword(string newPasswd,string oldPasswd)
         {
             var id = _tokenService.GetUidFromToken();
@@ -79,7 +104,17 @@ namespace VideoStoreManagementApi.Services
             return "Sucessfully Updated Password";
 
         }
+        #endregion
 
+        #region DeleteAddress
+        /// <summary>
+        /// Delete Address of user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>If Sucess Returns "Sucess" </returns>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<string> DeleteAddress(int id)
         {
             var address = await _addressRepository.GetById(id);
@@ -100,7 +135,17 @@ namespace VideoStoreManagementApi.Services
             }
             return "Sucess";
         }
+        #endregion
 
+        #region EditAddress
+        /// <summary>
+        /// Edit Address of user
+        /// </summary>
+        /// <param name="addressDTO"></param>
+        /// <returns>AddressDTO</returns>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<AddressDTO> EditAddress(AddressDTO addressDTO)
         {
             int id = addressDTO.Id;
@@ -127,7 +172,17 @@ namespace VideoStoreManagementApi.Services
             }
             return addressDTO; 
         }
+        #endregion
 
+        #region EditProfile
+        /// <summary>
+        /// Updates Firstname and lastname of user
+        /// </summary>
+        /// <param name="userProfileEditDTO"></param>
+        /// <returns>UserReturnDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<UserReturnDTO> EditProfile(UserProfileEditDTO userProfileEditDTO)
         {
             var id = _tokenService.GetUidFromToken();
@@ -152,7 +207,15 @@ namespace VideoStoreManagementApi.Services
             return userReturnDTo;
 
         }
+        #endregion
 
+        #region ViewProfile
+        /// <summary>
+        /// Fetches Profile Of user
+        /// </summary>
+        /// <returns>UserReturnDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
         public async Task<UserReturnDTO> ViewProfile()
         {
             var id = _tokenService.GetUidFromToken();
@@ -172,7 +235,16 @@ namespace VideoStoreManagementApi.Services
             return userReturnDTO;
 
         }
+        #endregion
 
+
+        #region ViewAddress
+        /// <summary>
+        /// Fetches List Of Address's of a user
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoItemsInDbException"></exception>
         public async Task<IList<AddressDTO>> ViewAddress()
         {
             var id = _tokenService.GetUidFromToken();
@@ -193,6 +265,7 @@ namespace VideoStoreManagementApi.Services
             }
             return addressDTOList;
         }
-        
+        #endregion
+
     }
 }

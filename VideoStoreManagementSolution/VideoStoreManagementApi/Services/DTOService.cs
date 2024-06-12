@@ -7,6 +7,15 @@ namespace VideoStoreManagementApi.Services
 {
     public class DTOService : IDTOService
     {
+        #region MapOrderToOrderDTO
+        /// <summary>
+        /// Maps Order to OrderDTO
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="orderItems"></param>
+        /// <param name="address"></param>
+        /// <param name="payment"></param>
+        /// <returns>OrderDTO</returns>
         public OrderDTO MapOrderToOrderDTO(Order order, IList<OrderItem> orderItems ,Address address , Payment? payment)
         {
             OrderDTO orderDTO = new OrderDTO()
@@ -30,6 +39,9 @@ namespace VideoStoreManagementApi.Services
             return orderDTO;    
             
         }
+        #endregion
+
+        #region MapAddressDTOToAddress
         public Address MapAddressDTOToAddress(AddressDTO addressDTO, Address a)
         {
             a.Area = addressDTO.Area;
@@ -40,7 +52,7 @@ namespace VideoStoreManagementApi.Services
             return a;
 
         }
-
+        #endregion
         public AddressDTO MapAddressRegisterDTOTOAddressDTO(AddressRegisterDTO addressRegisterDTO)
         {
             AddressDTO addressDTO = new AddressDTO();
@@ -60,7 +72,6 @@ namespace VideoStoreManagementApi.Services
             addressDTO.PrimaryAdress = a.PrimaryAdress;
             addressDTO.Zipcode = a.Zipcode;
             addressDTO.Id = a.Id;
-            addressDTO.State = a.State;
             return addressDTO;
         }
 
@@ -69,7 +80,6 @@ namespace VideoStoreManagementApi.Services
             Customer customer = new Customer();
             customer.MembershipType = Models.Enums.MembershipType.Basic;
             customer.Uid = user.Uid;
-            
             return customer;
         }
 

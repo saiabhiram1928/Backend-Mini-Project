@@ -27,6 +27,16 @@ namespace VideoStoreManagementApi.Repositories
         }
         public async Task MakePrimaryAddressFalse(int uid)
         {
+            var isInMemory = _context.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
+            //For Testing the method
+            if (isInMemory)
+            {
+                var address = await _context.Addresses.FirstOrDefaultAsync(a => a.CustomerId == uid && a.PrimaryAdress == true);
+                if (address == null) return;
+                address.PrimaryAdress = false;
+                await _context.SaveChangesAsync();
+                return;
+            }
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try

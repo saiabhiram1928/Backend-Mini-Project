@@ -14,11 +14,20 @@ namespace VideoStoreManagementApi.Services
         private string _apiKey;
         private const string GoogleMapsApiUrl = "https://maps.googleapis.com/maps/api/geocode/json";
 
+        #region Constructor
         public GeoLocationServices(IConfiguration configuration)
         {
             _apiKey = configuration["GoogleMaps:ApiKey"];
         }
+        #endregion
 
+        #region GetDistanceAsync
+        /// <summary>
+        /// Get Distance between the source and destination
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="destination"></param>
+        /// <returns>Returns a Double</returns>
         public async Task<double> GetDistanceAsync(string origin, string destination)
         {
             string requestUri = $"https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&key={_apiKey}";
@@ -45,6 +54,14 @@ namespace VideoStoreManagementApi.Services
             }
            
         }
+        #endregion
+
+        #region ValidateAddress
+        /// <summary>
+        /// Validates the Given Address 
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns>Returns True if address is correct </returns>
         public async Task<bool> ValidateAddress(string address)
         {
             try
@@ -76,7 +93,7 @@ namespace VideoStoreManagementApi.Services
                 return false;
             }
         }
+        #endregion
 
-
-        }
+    }
 }

@@ -8,7 +8,15 @@ namespace VideoStoreManagementApi.Services
 {
     public class HashServices:IHashService
     {
-       public bool AuthenticatePassword(string enteredpasswd, byte[] salt , byte[] realpasswd)
+        #region AuthenticatePassword
+        /// <summary>
+        /// Hashes the given text and validates with real password , to authenticate user
+        /// </summary>
+        /// <param name="enteredpasswd"></param>
+        /// <param name="salt"></param>
+        /// <param name="realpasswd"></param>
+        /// <returns>Return true , if password matches</returns>
+        public bool AuthenticatePassword(string enteredpasswd, byte[] salt , byte[] realpasswd)
         {
             HMACSHA512 hmac = new HMACSHA512(salt);
             var encryptpasswd = hmac.ComputeHash(Encoding.UTF8.GetBytes(enteredpasswd));
@@ -21,6 +29,14 @@ namespace VideoStoreManagementApi.Services
             return true;
             
         }
+        #endregion
+
+        #region HashPasswd
+        /// <summary>
+        /// Hashes the given the text
+        /// </summary>
+        /// <param name="passwd"></param>
+        /// <returns>Return byte array of password, salt</returns>
         public (byte[] , byte[]) HashPasswd(string passwd)
         {
             HMACSHA512 hmac = new HMACSHA512();
@@ -28,6 +44,7 @@ namespace VideoStoreManagementApi.Services
             var enypasswd = hmac.ComputeHash(Encoding.UTF8.GetBytes(passwd));
             return (enypasswd , salt);
         }
-       
+        #endregion
+
     }
 }

@@ -34,6 +34,7 @@ namespace VideoStoreManagementApi.Services
         private readonly IRefundRepository _refundRepository;
         private readonly IGeoLocationServices _geoLocationServices;
 
+        #region Constructor
         public OrderService(ICartRepository cartRepository, ICartItemsRepository cartItemsRepository, IOrderItemRepository orderItemRepository, IOrderRepository orderRepository, IPaymentRepository paymentRepository, ITokenService tokenService, IAddressRepository addressRepository, ICustomerRepository customerRepository, IRentalRepository rentalRepository, IPermanentRepository permanentRepository, IVideoRepository videoRepository, IInventoryRepository inventoryRepository, VideoStoreContext dbContext, IDTOService dTOService, IRefundRepository refundRepository, IGeoLocationServices geoLocationServices)
         {
             _cartRepository = cartRepository;
@@ -53,6 +54,20 @@ namespace VideoStoreManagementApi.Services
             _refundRepository = refundRepository;
             _geoLocationServices = geoLocationServices;
         }
+        #endregion
+
+        #region MakePayment
+        /// <summary>
+        /// Handles Payment,places order, delete cart items
+        /// </summary>
+        /// <param name="paymentType"></param>
+        /// <param name="addressId"></param>
+        /// <returns></returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoItemsInCartException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="QunatityOutOfStockException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<OrderDTO> MakePayment(PaymentType paymentType, int addressId)
         {
             var uid = _tokenService.GetUidFromToken();
@@ -146,6 +161,15 @@ namespace VideoStoreManagementApi.Services
             }
 
         }
+        #endregion
+
+        #region Helpers
+        
+        /// <summary>
+        /// Before making payment checks items with Qunatity required in cart are in stock 
+        /// </summary>
+        /// <param name="cartItems"></param>
+        /// <returns></returns>
         public async Task<string> CheckStockOfVideos(IList<CartItem> cartItems)
         {
             string ans = string.Empty;
@@ -159,6 +183,13 @@ namespace VideoStoreManagementApi.Services
             }
             return ans;
         }
+      
+        /// <summary>
+        ///  Transfer them to OrderItems
+        /// </summary>
+        /// <param name="cartItems"></param>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         public async Task CartItemsToOrderItems(IList<CartItem> cartItems, int orderId)
         {
             foreach (var cartItem in cartItems)
@@ -168,6 +199,13 @@ namespace VideoStoreManagementApi.Services
             }
             return;
         }
+       
+        /// <summary>
+        /// Clear Cart and CartItems
+        /// </summary>
+        /// <param name="cartItems"></param>
+        /// <param name="cart"></param>
+        /// <returns></returns>
         public async Task ClearCartAndCartItems(IList<CartItem> cartItems, Cart cart)
         {
             foreach (var cartItem in cartItems)
@@ -176,6 +214,12 @@ namespace VideoStoreManagementApi.Services
             }
             await _cartRepository.Delete(cart.Id);
         }
+
+        /// <summary>
+        /// Updates the stock after placing order
+        /// </summary>
+        /// <param name="cartItems"></param>
+        /// <returns></returns>
         public async Task ManageStock(IList<CartItem> cartItems)
         {
 
@@ -188,7 +232,15 @@ namespace VideoStoreManagementApi.Services
             return;
 
         }
+        #endregion
 
+        #region GetOrdersOfUser
+        /// <summary>
+        /// Fetches all orders of users
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
         public async Task<IList<OrderDTO>> GetOrdersOfUser()
         {
             var uid = _tokenService.GetUidFromToken();
@@ -207,7 +259,17 @@ namespace VideoStoreManagementApi.Services
             return orderDTOList;
 
         }
+        #endregion
 
+        #region GetOrderById
+        /// <summary>
+        /// Fetches an order by order id
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns>OrderDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
         public async Task<OrderDTO> GetOrderById(int orderId)
         {
             var uid = _tokenService.GetUidFromToken();
@@ -221,6 +283,16 @@ namespace VideoStoreManagementApi.Services
             Payment? payment = await _paymentRepository.GetPaymentByOrderId(orderId);
             return _dTOService.MapOrderToOrderDTO(order, order.OrderItems.ToList(), order.DeliveryAddress, payment);
         }
+        #endregion
+
+        #region ChangeOrderStatusForAdmin
+        /// <summary>
+        /// Changes order status Admin Service
+        /// </summary>
+        /// <param name="OrderId"></param>
+        /// <param name="deliveryStatus"></param>
+        /// <returns></returns>
+        /// <exception cref="NoSuchItemInDbException"></exception>
         public async Task<OrderStatus> ChangeOrderStatusForAdmin(int OrderId, OrderStatus deliveryStatus)
         {
             var order = await _orderRepository.GetById(OrderId);
@@ -232,7 +304,15 @@ namespace VideoStoreManagementApi.Services
             await _orderRepository.Update(order);
             return deliveryStatus;
         }
+        #endregion
 
+        #region MarkPaymentDoneCodForAdmin
+        /// <summary>
+        /// Changes Payment Status For COD
+        /// </summary>
+        /// <param name="OrderId"></param>
+        /// <returns></returns>
+        /// <exception cref="NoSuchItemInDbException"></exception>
         public async Task<MessageDTO> MarkPaymentDoneCodForAdmin(int OrderId)
         {
             var order = await _orderRepository.GetById(OrderId);
@@ -240,7 +320,19 @@ namespace VideoStoreManagementApi.Services
             order.PaymentDone = true;
             return new MessageDTO() { Message = "Payment Changed Sucessfully" };
         }
+        #endregion
 
+        #region CancelOrder
+        /// <summary>
+        /// Cancels Order , if payment done it issues refund
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns>Returns a Message </returns>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="OrderCantBeCancelledException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<MessageDTO> CancelOrder(int orderId)
         {
             var order = await _orderRepository.GetById(orderId);
@@ -259,7 +351,7 @@ namespace VideoStoreManagementApi.Services
             }
             if (order.OrderStatus == OrderStatus.Delivered || order.OrderStatus == OrderStatus.OutForDelivery || order.OrderStatus == OrderStatus.Canceled)
             {
-                throw new OrderCantBeCancelledException();
+                throw new OrderCantBeCancelledException($"Order Cant be Cancelled , because of order is {order.OrderStatus}");
             }
             if (order.PaymentType == PaymentType.COD) {
                 order.OrderStatus = OrderStatus.Canceled;
@@ -287,14 +379,24 @@ namespace VideoStoreManagementApi.Services
                 } catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    throw new DbException("Refud Cant be Created" + ex.Message);
+                    throw new DbException("Refud Cant be Initated" + ex.Message);
                 }
             }
             order.OrderStatus = OrderStatus.Canceled;
             await _orderRepository.Update(order);
             return new MessageDTO() { Message = "Refund Intiated Sucessfully" };
         }
+        #endregion
 
+        #region CheckRefundStatus
+        /// <summary>
+        /// Used to check refund status of order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns>RefundDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
         public async Task<RefundDTO> CheckRefundStatus(int orderId)
         {
             var order = await _orderRepository.GetById(orderId);
@@ -311,7 +413,15 @@ namespace VideoStoreManagementApi.Services
             return _dTOService.MapRefundToRefundDTO(refund);
 
         }
+        #endregion
 
+        #region IssuseRefundForAdmin
+        /// <summary>
+        /// Issues Refund to an order Admin Feature
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        /// <exception cref="NoSuchItemInDbException"></exception>
         public async Task<MessageDTO> IssuseRefundForAdmin(int orderId)
         {
             var order = await _orderRepository.GetById(orderId);
@@ -322,24 +432,57 @@ namespace VideoStoreManagementApi.Services
             await _refundRepository.Update(refund);
             return new MessageDTO() { Message = "Changed Refund Status Sucesfully" };
         }
+        #endregion
+
+        #region ViewAllRefundsForAdmin
+        /// <summary>
+        /// Fetches All Refunds Admin Feture
+        /// </summary>
+        /// <returns></returns>
         public async Task<IList<Refund>> ViewAllRefundsForAdmin()
         {
             var refunds = await _refundRepository.GetAll();
             return refunds.ToList();
         }
+        #endregion
+
+        #region ViewAllOrdersAreBasedOnStatusdForAdmin
+        /// <summary>
+        /// Fetches Order based on status for admin
+        /// </summary>
+        /// <param name="orderStatus"></param>
+        /// <returns>A List Orders</returns>
         public async Task<IList<Order>> ViewAllOrdersAreBasedOnStatusdForAdmin(OrderStatus orderStatus)
         {
             var orders = await _orderRepository.GetAll();
             var res = orders.Where(o => o.OrderStatus == orderStatus).ToList();
             return res;
         }
+        #endregion
+
+        #region GetOrderbyIdForAdmin
+        /// <summary>
+        /// Fetches an Order by id Admin Feature
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        /// <exception cref="NoSuchItemInDbException"></exception>
         public async Task<Order> GetOrderbyIdForAdmin(int orderId)
         {
             var order = await _orderRepository.GetById(orderId);
             if (order == null) throw new NoSuchItemInDbException("No Such Order Exist");
             return order;
         }
+        #endregion
 
+        #region GetAllOrdersForAdmin
+        /// <summary>
+        /// Fetches all Orders for admin with Pagination 
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<IList<Order>> GetAllOrdersForAdmin(int pageNumber, int pageSize)
         {
             if (pageNumber <= 0 || pageSize <= 0) throw new ArgumentException("Invalid pagenumber,pagesize");
@@ -347,5 +490,6 @@ namespace VideoStoreManagementApi.Services
             order = order.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderBy(o => o.Id);
             return order.ToList();
         }
+        #endregion
     }
 }

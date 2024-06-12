@@ -21,6 +21,8 @@ namespace VideoStoreManagementApi.Services
         private readonly IDTOService _dTOService;
         private readonly IInventoryRepository _inventoryRepository;
         private readonly CartHelpers _cartHelpers = new CartHelpers();
+
+        #region Constructor
         public CartService(ICartRepository cartRepository, ICartItemsRepository cartItemsRepository, ITokenService tokenService, IVideoRepository videoRepository, IDTOService dTOService , IInventoryRepository inventoryRepository)
         {
             _cartRepository = cartRepository;
@@ -30,7 +32,19 @@ namespace VideoStoreManagementApi.Services
             _dTOService = dTOService;
             _inventoryRepository = inventoryRepository;
         }
-      
+
+        #endregion
+
+        #region AddToCart
+        /// <summary>
+        /// Adds Item to cart, if cart doenst exist it creates cart and cartitems repsetively
+        /// </summary>
+        /// <param name="videoId"></param>
+        /// <param name="qty"></param>
+        /// <returns>CartDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoSuchItemInDbException"></exception>
+        /// <exception cref="QunatityOutOfStockException"></exception>
         public async Task<CartDTO> AddToCart(int videoId, int qty)
         {
             var uid = _tokenService.GetUidFromToken();
@@ -78,6 +92,15 @@ namespace VideoStoreManagementApi.Services
                 
             
         }
+        #endregion
+
+        #region ViewCart
+        /// <summary>
+        /// Fetches Cart Based on User Id
+        /// </summary>
+        /// <returns>CartDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoItemsInCartException"></exception>
 
         public async Task<CartDTO> ViewCart()
         {
@@ -99,7 +122,19 @@ namespace VideoStoreManagementApi.Services
             var cartDTO = _dTOService.MapCartToCartDTO(cart, cartItems.ToList());
             return cartDTO;
         }
+        #endregion
 
+        #region EditCart
+        /// <summary>
+        /// Edit CartItems Qunatity
+        /// </summary>
+        /// <param name="cartItemId"></param>
+        /// <param name="newQty"></param>
+        /// <returns>CartDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoItemsInCartException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<CartDTO> EditCart(int cartItemId, int newQty)
         {
                 var uid = _tokenService.GetUidFromToken();
@@ -127,9 +162,20 @@ namespace VideoStoreManagementApi.Services
                 var cartItems = await _cartItemsRepository.GetCartItemsWithCartId(cart.Id);
                 var cartDTO = _dTOService.MapCartToCartDTO(cart, cartItems.ToList());
                 return cartDTO;
-            
  
         }
+        #endregion
+
+        #region DeleteCartItem
+        /// <summary>
+        /// Delete CartItem
+        /// </summary>
+        /// <param name="cartItemId"></param>
+        /// <returns>CartDTO</returns>
+        /// <exception cref="UnauthorizedUserException"></exception>
+        /// <exception cref="NoItemsInCartException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="DbException"></exception>
         public async Task<CartDTO> DeleteCartItem(int cartItemId)
         {
             var uid = _tokenService.GetUidFromToken();
@@ -150,7 +196,7 @@ namespace VideoStoreManagementApi.Services
             var cartItems = await _cartItemsRepository.GetCartItemsWithCartId(cart.Id);
             return _dTOService.MapCartToCartDTO(cart, cartItems.ToList());
         }
+        #endregion
 
-        
     }
 }
