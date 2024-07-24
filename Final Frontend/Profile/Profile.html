@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Page</title>
+  <link rel="stylesheet" href="./src/output.css">
+  <style>
+    body {
+      background-color: #141414;
+      color: #e5e5e5;
+    }
+  </style>
+</head>
+<body class="bg-black">
+  <div class="container mx-auto p-4">
+    <!-- Profile Header -->
+    <div class="flex flex-col md:flex-row items-center justify-between py-6 border-b border-gray-700">
+      <div class="flex items-center">
+        <!-- Avatar -->
+        <div class="avatar placeholder">
+          <div class="bg-red-800 text-neutral-content w-24 rounded-full">
+            <span class="text-3xl">D</span>
+          </div>
+        </div>
+        <div class="ml-4">
+          <h2 class="text-2xl font-bold"><span id="header-name">John Doe</span> <span class=" kbd kbd-md text-green-400" id="subscription-status">Premium</span></h2>
+          <p class="text-gray-400" id="header-email">johndoe@example.com</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <!-- Personal Information -->
+      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold mb-4">Personal Information</h3>
+        <div class="space-y-2">
+          <div>
+            <label class="block text-gray-400">First Name</label>
+            <p id="personal-first-name">John</p>
+          </div>
+          <div>
+            <label class="block text-gray-400">Last Name</label>
+            <p id="personal-last-name">Doe</p>
+          </div>
+          <div>
+            <label class="block text-gray-400">Email</label>
+            <p id="personal-email">johndoe@example.com</p>
+          </div>
+        </div>
+        <button class="mt-4 btn btn-secondary" onclick="showEditPersonalInfoModal()">Edit Personal Information</button>
+      </div>
+      <!-- Addresses -->
+      <div class="bg-gray-800 p-6 rounded-lg shadow-lg overflow-y-scroll h-80">
+        <h3 class="text-xl font-semibold mb-4 text-white">Addresses</h3>
+       
+        <ul id="addresses-list" class=" text-white overflow-hidden">
+          <!-- Addresses will be populated here -->
+        </ul>
+        <button class="mb-4 btn btn-primary my-5 btn-wide mx-auto" onclick="showAddAddressModal()">Add New Address</button>
+      </div>
+      <!-- Orders -->
+      <div class="bg-gray-800 p-6 rounded-lg shadow-lg md:col-span-2 container">
+        <div class="md:px-2">
+          <h3 class="text-xl font-semibold mb-4">Orders</h3>
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right">
+              <thead class="text-xs uppercase bg-black">
+                <tr>
+                  <th scope="col" class="px-6 py-3">Order ID</th>
+                  <th scope="col" class="px-6 py-3">Ordered Date</th>
+                  <th scope="col" class="px-6 py-3">Amount</th>
+                  <th scope="col" class="px-6 py-3">Payment Type</th>
+                  <th scope="col" class="px-6 py-3">Order Status</th>
+                  <th scope="col" class="px-6 py-3">Rental or Permanent</th>
+                </tr>
+              </thead>
+              <tbody id="orders-list">
+                <!-- Orders will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Address Modal -->
+<dialog id="editAddressModal" class="modal">
+  <form id="editAddressForm" method="dialog" class="modal-box bg-red-800">
+    <h3 class="text-lg font-bold">Edit Address</h3>
+    <div class="mt-2">
+      <label class="block text-green-400 my-2">Area</label>
+      <input type="text" id="edit-area" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-green-400 my-2">City</label>
+      <input type="text" id="edit-city" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-gray-400">State</label>
+      <input type="text" id="edit-state" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-gray-400">Zip Code</label>
+      <input type="text" id="edit-zipcode" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-gray-400">Primary Address</label>
+      <input type="checkbox" id="edit-primaryAddress">
+    </div>
+    <div class="modal-action">
+      <button class="btn btn-primary" type="button" onclick="handleEditAddressForm()">Save</button>
+      <button class="btn btn-secondary" type="button" onclick="closeModal('editAddressModal')">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Edit Personal Information Modal -->
+<dialog id="editPersonalInfoModal" class="modal">
+  <form id="editPersonalInfoForm" method="dialog" class="modal-box bg-red-800">
+    <h3 class="text-lg font-bold">Edit Personal Information</h3>
+    <div class="mt-2">
+      <label class="block text-gray-400">First Name</label>
+      <input type="text" id="edit-first-name" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-gray-400">Last Name</label>
+      <input type="text" id="edit-last-name" class="input input-bordered w-full">
+    </div>
+    <div class="modal-action">
+      <button class="btn btn-primary" type="button" onclick="handleEditPersonalInfoForm()">Save</button>
+      <button class="btn btn-secondary" type="button" onclick="closeModal('editPersonalInfoModal')">Cancel</button>
+    </div>
+  </form>
+</dialog>
+<!-- Add Address Modal -->
+<dialog id="addAddressModal" class="modal">
+  <form id="addAddressForm" method="dialog" class="modal-box bg-red-800">
+    <h3 class="text-lg font-bold">Add New Address</h3>
+    <div class="mt-2">
+      <label class="block text-green-400 my-2">Area</label>
+      <input type="text" id="add-area" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-green-400 my-2">City</label>
+      <input type="text" id="add-city" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-gray-400">State</label>
+      <input type="text" id="add-state" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-gray-400">Zip Code</label>
+      <input type="text" id="add-zipcode" class="input input-bordered w-full">
+    </div>
+    <div class="mt-2">
+      <label class="block text-gray-400">Primary Address</label>
+      <input type="checkbox" id="add-primaryAddress">
+    </div>
+    <div class="modal-action">
+      <button class="btn btn-primary" type="button" onclick="handleAddAddressForm()">Save</button>
+      <button class="btn btn-secondary" type="button" onclick="closeModal('addAddressModal')">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+
+  <script src="Profile.js"></script>
+</body>
+</html>

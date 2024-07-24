@@ -19,7 +19,7 @@ namespace VideoStoreManagementApi.Services.Helpers
             order.DeliveryAddressId = addressId;
             order.PaymentType = paymentType;
             order.RentalOrPermanent = membershipType == MembershipType.Basic ? "Rental": "Permanent" ;
-            order.OrderStatus = OrderStatus.Shipped;
+            order.OrderStatus = OrderStatus.Transit;
             return order;
         }
         public static int GenerateTransactionId()

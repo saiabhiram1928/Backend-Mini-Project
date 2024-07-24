@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flix-Home</title>
     <link rel="stylesheet" href="./src/output.css">
-    <link rel="stylesheet" href="./Cyberpunk.css">
+    <style>
+        .font-mono {
+          font-family: monospace;
+        }
+      </style>
 </head>
-<body class="bg-gray-800 text-white min-h-screen">
+<body class="bg-gray-800 text-white min-h-screen font-mono ">
+    <!-- navbar -->
     <nav class="navbar w-full bg-black sticky flex items-center justify-between">
         <div class="flex items-center w-1/4">
-            <a class="btn btn-ghost md:text-3xl text-xl text-red-800" href="">JustFlix</a>
+            <a class="btn btn-ghost md:text-3xl text-xl text-red-800" href="Home.html">JustFlix</a>
         </div>
         
         <form id="search-form" class="w-1/2 navbar-start hidden md:flex items-center p-3">
@@ -33,25 +38,8 @@
             </div>
         </form>
         <div id="navbar-end" class="md:w-1/4 w-full p-3 flex justify-evenly">
-            <!-- Cart icon with badge showing number of items -->
-            <div tabindex="0" role="button" class="relative">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-                <span id="cart-item-total" class="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">8</span>
-            </div>
-            <!-- profile icon drop with contents like signout, profile, myorders -->
-            <div class="dropdown dropdown-bottom dropdown-left z-50">
-                <label tabindex="0" class="cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-                        <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zm7.605-8.562a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
-                    </svg>
-                </label>
-                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-red-700 rounded-box w-40">
-                    <li><a class="text-white link-success" href="#">Profile</a></li>
-                    <li><a href="#">Sign out</a></li>
-                </ul>
-            </div>
+           
+             
             <div class="block md:hidden p-3">
                 <button id="hamburger-menu" class="text-white focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -61,6 +49,7 @@
             </div>
         </div>
     </nav>
+    <!-- mobile-navbar -->
     <div id="mobile-search-form" class="hidden md:hidden flex-col w-full p-3 bg-gray-900">
         <form class="flex flex-col items-center">
             <input id="mobile-search-text" class="mb-2 w-11/12 border-none input bg-gray-800" placeholder="Search...." />
@@ -78,7 +67,49 @@
             </button>
         </form>
     </div>
-       <!-- sort option collapse where it contians radio buttons each button contains diff type of sorting thinsg like sort by price desc -->
+    <!-- carosul -->
+    <!-- <div class="flex justify-center items-center">
+        <div class="carousel bg-gray-800 h-80 w-full mt-5 relative overflow-hidden">
+            <div id="slide1" class="carousel-item absolute inset-0 transition-transform transform translate-x-0">
+                <img
+                    src="https://rukminim2.flixcart.com/image/850/1000/kavefm80/poster/w/x/z/medium-the-marvel-avengers-wall-poster-for-room-with-gloss-original-imafsckr6vt3wjjv.jpeg?q=20&crop=false"
+                    class="object-cover h-full w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex transform justify-between -translate-y-1/2">
+                    <a href="#slide4" class="btn btn-circle bg-white text-black">❮</a>
+                    <a href="#slide2" class="btn btn-circle bg-white text-black">❯</a>
+                </div>
+            </div>
+            <div id="slide2" class="carousel-item absolute inset-0 transition-transform transform translate-x-full">
+                <img
+                    src="https://img.freepik.com/free-vector/elegant-retro-movie-strip-design-black-background_1017-42668.jpg?size=626&ext=jpg&ga=GA1.1.484706707.1721291873&semt=ais_user"
+                    class="object-cover h-full w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex transform justify-between -translate-y-1/2">
+                    <a href="#slide1" class="btn btn-circle bg-white text-black">❮</a>
+                    <a href="#slide3" class="btn btn-circle bg-white text-black">❯</a>
+                </div>
+            </div>
+            <div id="slide3" class="carousel-item absolute inset-0 transition-transform transform translate-x-full">
+                <img
+                    src="https://rukminim2.flixcart.com/image/850/1000/kavefm80/poster/w/x/z/medium-the-marvel-avengers-wall-poster-for-room-with-gloss-original-imafsckr6vt3wjjv.jpeg?q=20&crop=false"
+                    class="object-cover h-full w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex transform justify-between -translate-y-1/2">
+                    <a href="#slide2" class="btn btn-circle bg-white text-black">❮</a>
+                    <a href="#slide4" class="btn btn-circle bg-white text-black">❯</a>
+                </div>
+            </div>
+            <div id="slide4" class="carousel-item absolute inset-0 transition-transform transform translate-x-full">
+                <img
+                    src="https://rukminim2.flixcart.com/image/850/1000/kavefm80/poster/w/x/z/medium-the-marvel-avengers-wall-poster-for-room-with-gloss-original-imafsckr6vt3wjjv.jpeg?q=20&crop=false"
+                    class="object-cover h-full w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex transform justify-between -translate-y-1/2">
+                    <a href="#slide3" class="btn btn-circle bg-white text-black">❮</a>
+                    <a href="#slide1" class="btn btn-circle bg-white text-black">❯</a>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+       <!--Filter Options -->
     <section class="py-10 bg-gray-800">
         <div class="container mx-auto px-5">
             <h2 class="text-2xl font-semibold mb-4">Filters</h2>
@@ -100,20 +131,20 @@
                         <div class="w-full">
                             <div class="mt-2 ml-5 space-y-2 grid md:grid-cols-2 pl-2">
                                 <div class="flex items-center">
-                                    <input id="english" name="language[]" type="checkbox" value="English" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                    <label for="english" class="ml-2 block text-sm text-gray-300">English</label>
+                                    <input id="english" name="language[]" type="checkbox" value="English" class="checkbox checkbox-success">
+                                    <label for="english" class="ml-2 block text-lg text-gray-300">English</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input id="hindi" name="language[]" type="checkbox" value="Hindi" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                    <label for="hindi" class="ml-2 block text-sm text-gray-300">Hindi</label>
+                                    <input id="hindi" name="language[]" type="checkbox" value="Hindi" class="checkbox checkbox-success">
+                                    <label for="hindi" class="ml-2 block text-lg text-gray-300">Hindi</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input id="telugu" name="language[]" type="checkbox" value="Telugu" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                    <label for="telugu" class="ml-2 block text-sm text-gray-300">Telugu</label>
+                                    <input id="telugu" name="language[]" type="checkbox" value="Telugu" class="checkbox  checkbox-success">
+                                    <label for="telugu" class="ml-2 block text-lg text-gray-300">Telugu</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input id="tamil" name="language[]" type="checkbox" value="Tamil" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                    <label for="tamil" class="ml-2 block text-sm text-gray-300">Tamil</label>
+                                    <input id="tamil" name="language[]" type="checkbox" value="Tamil" class="checkbox checkbox-success">
+                                    <label for="tamil" class="ml-2 block text-lg text-gray-300">Tamil</label>
                                 </div>
                             </div>
                         </div>
@@ -142,27 +173,56 @@
             </form>
         </div>
     </section>
-    <div class="container mx-auto px-5 mt-8">
-        <div class="flex justify-end">
-            <div class="dropdown dropdown-hover">
-                <label tabindex="0" class="btn btn-outline m-1">Sort</label>
-                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-gray-700 rounded-box w-52">
-                    <li><a href="#" class="block px-4 py-2">Sort by Release Date</a></li>
-                    <li><a href="#" class="block px-4 py-2">Sort by Director</a></li>
-                    <li><a href="#" class="block px-4 py-2">Sort by Cost</a></li>
-                </ul>
+    <!-- sort options -->
+    <section class="py-4 bg-gray-800">
+        <div class="container mx-auto px-5">
+            <div id="sort-options" class="flex flex-wrap space-x-4">
+                <div class="relative">
+                    <button class="btn btn-outline border-gray-600 text-white" onclick="toggleSortOption(this)">All</button>
+                </div>
+            
+                <!--  -->
+                <div class="relative">
+                    <button class="btn btn-outline border-gray-600 text-white" onclick="toggleSortOption(this)">Sort by Date</button>
+                </div>
+                <div class="relative">
+                    <button class="btn btn-outline border-gray-600 text-white" onclick="toggleSortOption(this)">Sort by Price</button>
+                </div>
+                <div class="relative">
+                    <button class="btn btn-outline border-gray-600 text-white" onclick="toggleSortOption(this)">Sort by Rating</button>
+                </div>
             </div>
         </div>
-    </div>
-     <!-- pagination -->
+    </section>
+     <!-- pagination && cards-->
     <div class="mx-auto p-4 mt-20">
         <div id="movie-grid" class="grid grid-cols-1 md:grid-cols-3 gap-10"></div>
         <div class="join flex items-center justify-center mt-10 ">
             <button id="prev-page" class="join-item btn btn-outline text-white border-2">«</button>
             <button id="current-page-number" class="join-item btn bg-red-800 text-white">Page 1</button>
-            <button id="next-page" class="join-item btn btn-outline text-white border-2">»</button>
+            <button id="next-page" class="join-item btn btn-outline text-white border-2 ">»</button>
         </div>
     </div>
-    <script src="./Home.js"></script>
+    <script src="Home.js" type="module"></script>
+    <script>
+        
+ const toggleSortOption = (button) => {
+    if (button.classList.contains('active')) {
+        button.classList.remove('active');
+        button.querySelector('.remove-btn').remove();
+    } else {
+        button.classList.add('active');
+        let removeBtn = document.createElement('span');
+        removeBtn.innerHTML = '✖';
+        removeBtn.classList.add('remove-btn');
+        removeBtn.onclick = function() {
+            button.classList.remove('active');
+            this.remove();
+        };
+        button.appendChild(removeBtn);
+    }
+}
+    </script>
+    <script type="module" src="Navbar.js"></script>
 </body>
 </html>

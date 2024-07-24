@@ -49,7 +49,7 @@
         </div>
     </div>
     <script>
-         function validatePassword() {
+         const validatePassword = () => {
             var password = document.getElementById('password').value;
             var length = document.getElementById('length');
             var uppercase = document.getElementById('uppercase');
@@ -94,36 +94,7 @@
                 special.classList.add('invalid');
             }
         }
-
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var email = document.getElementById('email');
-            var password = document.getElementById('password');
-            var emailError = document.getElementById('emailError');
-            var passwordError = document.getElementById('passwordError');
-
-            emailError.classList.add('hidden');
-            passwordError.classList.add('hidden');
-
-            var isValid = true;
-
-            if (!email.checkValidity()) {
-                emailError.classList.remove('hidden');
-                isValid = false;
-            }
-
-           
-            var passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-            if (!passwordPattern.test(password.value)) {
-                passwordError.classList.remove('hidden');
-                isValid = false;
-            }
-
-            if (isValid) {
-                //Need to send data to server
-                alert('Form submitted successfully!');
-            }
-        });
     </script>
+    <script type="module" src="Login.js"></script>
 </body>
 </html>

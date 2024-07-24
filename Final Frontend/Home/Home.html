@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flix-Home</title>
+    <link rel="stylesheet" href="./src/output.css">
+    <!-- <link rel="stylesheet" href="./Cyberpunk.css"> -->
+    <style>
+        .font-mono {
+          font-family: monospace;
+        }
+      </style>
+</head>
+<body class="bg-gray-800 text-white min-h-screen font-mono">
+    <!-- navbar -->
+    <nav class="navbar w-full bg-black sticky flex items-center justify-between">
+        <div class="flex items-center w-1/4">
+            <a class="btn btn-ghost md:text-3xl text-xl text-red-800" href="Home.html">JustFlix</a>
+        </div>
+        
+        <form id="search-form" class="w-1/2 navbar-start hidden md:flex items-center p-3">
+            <div class="bg-inherit w-2/3 join-item">
+                <input id="search-text" class="w-full border-none input bg-gray-800 join-item" placeholder="Search...." />
+            </div>
+            <select id="search-genre" class="select join-item bg-gray-900 border-gray-700 text-white">
+                <option disabled selected>Genre</option>
+                <option>Action</option>
+                <option>Drama</option>
+                <option>Sci-Fi</option>
+                <option>Thriller</option>
+            </select>
+            <div class="indicator join-item">
+                <button type="submit" class="btn btn-rectangle btn-error border-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </form>
+        <div id="navbar-end" class="md:w-1/4 w-full p-3 flex justify-evenly">
+           
+             
+            <div class="block md:hidden p-3">
+                <button id="hamburger-menu" class="text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <!-- mobile-navbar -->
+    <div id="mobile-search-form" class="hidden md:hidden flex-col w-full p-3 bg-gray-900">
+        <form class="flex flex-col items-center">
+            <input id="mobile-search-text" class="mb-2 w-11/12 border-none input bg-gray-800" placeholder="Search...." />
+            <select id="mobile-search-genre" class="mb-2 select bg-gray-900 border-gray-700 text-white w-11/12">
+                <option disabled selected>Genre</option>
+                <option>Action</option>
+                <option>Drama</option>
+                <option>Sci-Fi</option>
+                <option>Thriller</option>
+            </select>
+            <button type="submit" class="btn btn-error border-2 w-11/12">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                    <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </form>
+    </div>
+    <!-- carosul -->
+    <!-- <div class="flex justify-center items-center">
+        <div class="carousel bg-gray-800 h-80 w-full mt-5 relative overflow-hidden">
+            <div id="slide1" class="carousel-item absolute inset-0 transition-transform transform translate-x-0">
+                <img
+                    src="https://rukminim2.flixcart.com/image/850/1000/kavefm80/poster/w/x/z/medium-the-marvel-avengers-wall-poster-for-room-with-gloss-original-imafsckr6vt3wjjv.jpeg?q=20&crop=false"
+                    class="object-cover h-full w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex transform justify-between -translate-y-1/2">
+                    <a href="#slide4" class="btn btn-circle bg-white text-black">❮</a>
+                    <a href="#slide2" class="btn btn-circle bg-white text-black">❯</a>
+                </div>
+            </div>
+            <div id="slide2" class="carousel-item absolute inset-0 transition-transform transform translate-x-full">
+                <img
+                    src="https://img.freepik.com/free-vector/elegant-retro-movie-strip-design-black-background_1017-42668.jpg?size=626&ext=jpg&ga=GA1.1.484706707.1721291873&semt=ais_user"
+                    class="object-cover h-full w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex transform justify-between -translate-y-1/2">
+                    <a href="#slide1" class="btn btn-circle bg-white text-black">❮</a>
+                    <a href="#slide3" class="btn btn-circle bg-white text-black">❯</a>
+                </div>
+            </div>
+            <div id="slide3" class="carousel-item absolute inset-0 transition-transform transform translate-x-full">
+                <img
+                    src="https://rukminim2.flixcart.com/image/850/1000/kavefm80/poster/w/x/z/medium-the-marvel-avengers-wall-poster-for-room-with-gloss-original-imafsckr6vt3wjjv.jpeg?q=20&crop=false"
+                    class="object-cover h-full w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex transform justify-between -translate-y-1/2">
+                    <a href="#slide2" class="btn btn-circle bg-white text-black">❮</a>
+                    <a href="#slide4" class="btn btn-circle bg-white text-black">❯</a>
+                </div>
+            </div>
+            <div id="slide4" class="carousel-item absolute inset-0 transition-transform transform translate-x-full">
+                <img
+                    src="https://rukminim2.flixcart.com/image/850/1000/kavefm80/poster/w/x/z/medium-the-marvel-avengers-wall-poster-for-room-with-gloss-original-imafsckr6vt3wjjv.jpeg?q=20&crop=false"
+                    class="object-cover h-full w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex transform justify-between -translate-y-1/2">
+                    <a href="#slide3" class="btn btn-circle bg-white text-black">❮</a>
+                    <a href="#slide1" class="btn btn-circle bg-white text-black">❯</a>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+       <!--Filter Options -->
+    <section class="py-10 bg-gray-800">
+        <div class="container mx-auto px-5">
+            <h2 class="text-2xl font-semibold mb-4">Filters</h2>
+            <form method="post" action="/filter">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block mb-2">Filter by Director:</label>
+                        <input type="text" name="director" class="w-full px-2 py-1 bg-gray-700 rounded">
+                    </div>
+                    <div class="border border-gray-600 rounded-md p-4">
+                        <label class="block mb-2">Filter by Release Year:</label>
+                        <div class="relative">
+                            <input type="range" name="release_year" id="release-year-slider" min="1980" value="1980" max="2024" step="1" class="w-full bg-gray-700 rounded" />
+                            <div class="text-center mt-2" id="slider-value"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Filter by Language:</label>
+                        <div class="w-full">
+                            <div class="mt-2 ml-5 space-y-2 grid md:grid-cols-2 pl-2">
+                                <div class="flex items-center">
+                                    <input id="english" name="language[]" type="checkbox" value="English" class="checkbox checkbox-success">
+                                    <label for="english" class="ml-2 block text-lg text-gray-300">English</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="hindi" name="language[]" type="checkbox" value="Hindi" class="checkbox checkbox-success">
+                                    <label for="hindi" class="ml-2 block text-lg text-gray-300">Hindi</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="telugu" name="language[]" type="checkbox" value="Telugu" class="checkbox  checkbox-success">
+                                    <label for="telugu" class="ml-2 block text-lg text-gray-300">Telugu</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="tamil" name="language[]" type="checkbox" value="Tamil" class="checkbox checkbox-success">
+                                    <label for="tamil" class="ml-2 block text-lg text-gray-300">Tamil</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border border-gray-600 rounded-md p-4">
+                        <label class="block mb-2">Filter by Rating:</label>
+                        <div class="relative">
+                            <input type="range" name="rating" id="rating-slider" min="0" value="0" max="10" step="1" class="w-full bg-gray-700 rounded" />
+                            <div class="text-center mt-2 text-lg" id="rating-value"></div>
+                        </div>
+                    </div>
+                    <!-- Cost Filter using daisyUI -->
+                    <div class="border border-gray-600 rounded-md p-4">
+                        <label class="block mb-2">Filter by Cost:</label>
+                        <div class="relative">
+                            <input type="range" name="cost" id="cost-slider" min="0" value="0" max="100" step="1" class="w-full bg-gray-700 rounded" />
+                            <div class="text-center mt-2 text-lg" id="cost-value"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Apply and Reset Buttons -->
+                <div class="mt-4 flex justify-end">
+                    <button id="filter-form" type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Apply</button>
+                    <button id="reset-button" class="bg-gray-500 text-white mx-5 px-4 py-2 rounded">Reset</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <!-- sort options -->
+    <section class="py-4 bg-gray-800">
+        <div class="container mx-auto px-5">
+            <div id="sort-options" class="flex flex-wrap space-x-4">
+                <div class="relative">
+                    <button class="btn btn-outline border-gray-600 text-white" onclick="toggleSortOption(this)">All</button>
+                </div>
+            
+                <!--  -->
+                <div class="relative">
+                    <button class="btn btn-outline border-gray-600 text-white" onclick="toggleSortOption(this)">Sort by Date</button>
+                </div>
+                <div class="relative">
+                    <button class="btn btn-outline border-gray-600 text-white" onclick="toggleSortOption(this)">Sort by Price</button>
+                </div>
+                <div class="relative">
+                    <button class="btn btn-outline border-gray-600 text-white" onclick="toggleSortOption(this)">Sort by Rating</button>
+                </div>
+            </div>
+        </div>
+    </section>
+     <!-- pagination && cards-->
+    <div class="mx-auto p-4 mt-20">
+        <div id="movie-grid" class="grid grid-cols-1 md:grid-cols-3 gap-10"></div>
+        <div class="join flex items-center justify-center mt-10 ">
+            <button id="prev-page" class="join-item btn btn-outline text-white border-2">«</button>
+            <button id="current-page-number" class="join-item btn bg-red-800 text-white">Page 1</button>
+            <button id="next-page" class="join-item btn btn-outline text-white border-2 ">»</button>
+        </div>
+    </div>
+    <script src="Home.js" type="module"></script>
+    <script>
+        
+ const toggleSortOption = (button) => {
+    if (button.classList.contains('active')) {
+        button.classList.remove('active');
+        button.querySelector('.remove-btn').remove();
+    } else {
+        button.classList.add('active');
+        let removeBtn = document.createElement('span');
+        removeBtn.innerHTML = '✖';
+        removeBtn.classList.add('remove-btn');
+        removeBtn.onclick = function() {
+            button.classList.remove('active');
+            this.remove();
+        };
+        button.appendChild(removeBtn);
+    }
+}
+    </script>
+    <script type="module" src="Navbar.js"></script>
+</body>
+</html>

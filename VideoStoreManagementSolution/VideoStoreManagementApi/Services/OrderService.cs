@@ -116,7 +116,6 @@ namespace VideoStoreManagementApi.Services
 
                     if (membershipType == MembershipType.Basic)
                     {
-
                         Rental rental = new Rental();
                         rental.TotalQty = totalQty;
                         rental.OrderId = order.Id;
@@ -124,20 +123,15 @@ namespace VideoStoreManagementApi.Services
                         rental.DueDate = order.ExpectedDeliveryDate.AddDays(7);
                         rental.TotalPrice = cart.TotalPrice;
                         rental = await _rentalRepository.Add(rental);
-
-
-
                     }
                     else
                     {
-
                         Permanent permanent = new Permanent();
                         permanent.TotalQty = totalQty;
                         permanent.TotalPrice = cart.TotalPrice;
                         permanent.OrderId = order.Id;
                         permanent.TotalPrice = cart.TotalPrice;
                         permanent = await _permanentRepository.Add(permanent);
-
 
                     }
 
@@ -280,8 +274,9 @@ namespace VideoStoreManagementApi.Services
             var order = await _orderRepository.GetById(orderId);
             if (order == null) throw new NoSuchItemInDbException("No Order With Given Id");
             if (order.CustomerId != (int)uid) throw new UnauthorizedAccessException("You cant Acess the Given Order");
+            var orderItems = await _orderItemRepository.GetOrderItemsbyOrderId(orderId);
             Payment? payment = await _paymentRepository.GetPaymentByOrderId(orderId);
-            return _dTOService.MapOrderToOrderDTO(order, order.OrderItems.ToList(), order.DeliveryAddress, payment);
+            return _dTOService.MapOrderToOrderDTO(order, orderItems.ToList(), order.DeliveryAddress, payment);
         }
         #endregion
 
@@ -356,16 +351,16 @@ namespace VideoStoreManagementApi.Services
             if (order.PaymentType == PaymentType.COD) {
                 order.OrderStatus = OrderStatus.Canceled;
                 await _orderRepository.Update(order);
-                return new MessageDTO() { Message = "Order Cancelled Sucessfully" }; }
+                return new MessageDTO() { Message = "Order Cancelled Sucessfully" }; 
+            }
             var payment = order.Payments.SingleOrDefault(p => p.PaymentSucess = true);
             if (payment == null)
             {
                 throw new DbException("Cant Fetch Payment Details");
             }
-
             Refund refund = new Refund()
             {
-                Amount = (float)(order.TotalAmount - (0.05 * order.TotalAmount) - (0.1 * order.TotalAmount)),
+                Amount = (float)(order.TotalAmount - (0.1 * order.TotalAmount)),
                 OrderId = orderId,
                 Status = RefundStatus.Intiated,
                 TranasactionId = payment.TransactionId,
@@ -489,6 +484,40 @@ namespace VideoStoreManagementApi.Services
             var order = await _orderRepository.GetAll();
             order = order.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderBy(o => o.Id);
             return order.ToList();
+        }
+        #endregion
+
+        #region ReturnVideos
+        public async Task<Rental> ReturnVideos(int orderId)
+        {
+            var uid = _tokenService.GetUidFromToken();
+            if (uid == null)
+            {
+                throw new UnauthorizedUserException("Token Invalid");
+            }
+
+            var rental = await _rentalRepository.GetByOrderId(orderId);
+            if (rental == null)
+            {
+                throw new NullReferenceException("Rental not found");
+            }
+
+            rental.ReturnDate = DateTime.Now;
+
+            if (rental.ReturnDate > rental.DueDate)
+            {
+                var lateHours = (rental.ReturnDate - rental.DueDate).TotalHours;
+                var lateFee = (float)(Math.Ceiling(lateHours) * 5);
+                rental.LateFee = lateFee;
+            }
+            else
+            {
+                rental.LateFee = 0;
+            }
+
+           rental =  await _rentalRepository.Update(rental);
+
+            return rental;
         }
         #endregion
     }

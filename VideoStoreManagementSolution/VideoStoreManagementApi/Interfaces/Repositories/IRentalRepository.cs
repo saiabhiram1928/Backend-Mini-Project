@@ -4,5 +4,6 @@ namespace VideoStoreManagementApi.Interfaces.Repositories
 {
     public interface IRentalRepository : IRepository<int,Rental>
     {
+        public Task<Rental> GetByOrderId(int orderId);
     }
 }

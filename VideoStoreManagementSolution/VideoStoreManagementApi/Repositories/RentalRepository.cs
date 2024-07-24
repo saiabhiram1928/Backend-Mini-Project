@@ -19,5 +19,10 @@ namespace VideoStoreManagementApi.Repositories
             var item = await _context.Rentals.SingleOrDefaultAsync(x => x.Id == key);
             return item;
         }
+        public async Task<Rental> GetByOrderId(int orderId)
+        {
+            var item =await _context.Rentals.SingleOrDefaultAsync(item =>item.OrderId == orderId);
+            return item;
+        }
     }
 }

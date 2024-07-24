@@ -6,5 +6,6 @@ namespace VideoStoreManagementApi.Interfaces.Repositories
     {
         public Task<bool> CheckCartExist(int uid);
         public Task<Cart> GetByUserId(int uid);
+        public Task<int> CartItemsCount(int uid);
     }
 }

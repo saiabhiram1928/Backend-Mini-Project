@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Page</title>
+  <link rel="stylesheet" href="./src/output.css">
+  <style>
+    body {
+      background-color: #141414;
+    }
+
+    .text-netflix-red {
+      color: #e50914;
+    }
+
+    .bg-netflix-red {
+      background-color: #e50914;
+    }
+  </style>
+</head>
+
+<body class="text-gray-200 font-mono">
+  <div class="container mx-auto p-4">
+    <div class="flex flex-col lg:flex-row justify-between">
+      <!-- Left Side: Cart Items and Addresses -->
+      <div class="w-full lg:w-2/3 p-4">
+        <h2 class="text-2xl font-bold mb-4">Cart Items</h2>
+        <div id="cart-items" class="bg-gray-800 p-4 rounded mb-4">
+          <!-- Cart items will be populated here -->
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg overflow-y-scroll mb-4 h-64">
+          <h3 class="text-xl font-semibold mb-4">Select Address</h3>
+          <div class="flow-root">
+            <ul id="address-list" role="list" class="text-white">
+              <!-- Address cards will be populated here -->
+            </ul>
+          </div>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-4">Payment Method</h2>
+        <div class="bg-gray-800 p-4 rounded mb-4">
+          <label for="payment" class="block text-lg font-semibold mb-2">Choose Payment Method</label>
+          <select id="payment" name="payment" class="w-full p-2 rounded bg-gray-700 border border-gray-600">
+            <option value="UPI">UPI</option>
+            <option value="COD">COD</option>
+            <!-- Add more payment methods as needed -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Right Side: Delivery Date, Bill Summary, and Place Order -->
+      <div class="w-full lg:w-1/3 max-h-96 md:mt-16 p-4 bg-gray-800 rounded lg:ml-4">
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold mb-2">Delivery Date</h3>
+          <p class="text-lg">Estimated delivery: <span class="text-netflix-red">July 20, 2024</span></p>
+        </div>
+
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold mb-2">Bill Summary</h3>
+          <div class="flex justify-between mb-2">
+            <span>Subtotal</span>
+            <span id="subtotal">$0.00</span>
+          </div>
+          <div class="flex justify-between mb-2">
+            <span>Delivery Charges (5%)</span>
+            <span id="delivery-charges">$0.00</span>
+          </div>
+          <div class="flex justify-between text-2xl font-bold mb-4">
+            <span>Total Amount</span>
+            <span id="total-amount">$0.00</span>
+          </div>
+        </div>
+
+        <button id="place-order-btn" class="w-full btn btn-success p-3 bg-netflix-red text-white font-bold rounded hover:bg-red-600">
+          Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await fetchCartItems();
+      await fetchAddresses();
+      document.getElementById('place-order-btn').addEventListener('click', placeOrder);
+    });
+
+    const fetchCartItems = async () => {
+      try {
+        const response = await fetchWithAuth('https://localhost:7029/api/Cart/ViewCart');
+        if (!response.ok) {
+          throw new Error('Failed to fetch cart items');
+        }
+        const cartData = await response.json();
+        const cartItems = cartData.cartItems;
+
+        const cartItemsContainer = document.getElementById('cart-items');
+        cartItemsContainer.innerHTML = '';
+
+        let subtotal = 0;
+        cartItems.forEach(item => {
+          subtotal += item.price;
+          cartItemsContainer.innerHTML += `
+            <div class="flex justify-between items-center mb-4">
+              <div class="flex items-center w-full">
+                <img src="https://via.placeholder.com/100" alt="${item.videoTittle}" class="w-20 h-20 mr-4">
+                <div class="w-1/2">
+                  <h3 class="text-lg font-semibold link text-blue-400">
+                    <a href="http://127.0.0.1:5500/Video.html?id=${item.videoId}" target="_blank">${item.videoTittle}</a>
+                  </h3>
+                  <div class="flex justify-between items-center mt-2">
+                    <div class="text-md text-bold">Qty 
+                      <button onclick="updateQuantity(${item.cartItemId}, ${item.qty - 1})" class="px-2">-</button>
+                      ${item.qty}
+                      <button onclick="updateQuantity(${item.cartItemId}, ${item.qty + 1})" class="px-2">+</button>
+                    </div>
+                    <button onclick="removeCartItem(${item.cartItemId})" class="btn">Remove</button>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-lg font-semibold">₹${(item.price * item.qty).toFixed(2)}</p>
+              </div>
+            </div>
+          `;
+        });
+
+        document.getElementById('subtotal').innerText = `${subtotal.toFixed(2)}`;
+        const deliveryCharges = subtotal * 0.05;
+        document.getElementById('delivery-charges').innerText = `₹${deliveryCharges.toFixed(2)}`;
+        const totalAmount = subtotal + deliveryCharges;
+        document.getElementById('total-amount').innerText = `₹${totalAmount.toFixed(2)}`;
+
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+        alert('Failed to fetch cart items. Redirecting to home page.');
+        window.location.href = '/Home.html?page=1';
+      }
+    }
+
+    const fetchAddresses = async () => {
+      try {
+        const response = await fetchWithAuth('https://localhost:7029/api/User/ViewAdressesOfUser/');
+        if (!response.ok) {
+          throw new Error('Failed to fetch addresses');
+        }
+        const addresses = await response.json();
+
+        const addressList = document.getElementById('address-list');
+        addressList.innerHTML = '';
+
+        addresses.forEach(address => {
+          addressList.innerHTML += `
+            <li class="py-1 sm:py-4 border-2 rounded-lg px-2 mt-5">
+              <div class="flex items-center">
+                <input type="radio" name="address" id="address${address.id}" class="mr-4" value="${address.id}">
+                <label for="address${address.id}" class="text-white">
+                  <p>${address.area}</p>
+                  <p>${address.city}</p>
+                  <p>${address.state}, ${address.zip}</p>
+                </label>
+              </div>
+            </li>
+          `;
+        });
+
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+        alert('Failed to fetch addresses. Redirecting to home page.');
+        window.location.href = '/Home.html?page=1';
+      }
+    }
+
+    const updateQuantity = async (cartItemId, newQty) => {
+      if (newQty <= 0) return;
+      console.log(cartItemId , newQty);
+      try {
+        const url = `https://localhost:7029/api/Cart/UpdateCart?cartItemId=${cartItemId}&newQty=${newQty}`;
+       const res= await fetchWithAuth(url, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        location.reload();
+      } catch (error) {
+        console.error('Error updating quantity:', error);
+        alert(error.message)
+      }
+    }
+
+    const removeCartItem = async (cartItemId) => {
+      const id = parseInt(cartItemId)
+      try {
+        const url = `https://localhost:7029/api/Cart/DeleteCartItem?cartItemId=${id}`;
+        await fetchWithAuth(url, {
+          method: 'DELETE'
+        });
+
+        location.reload();
+      } catch (error) {
+        console.error('Error removing cart item:', error);
+        alert("Cant Remove Cart Item");
+      }
+    }
+
+    const fetchWithAuth = async (url, options = {}) => {
+      const token = getCookie('token');
+      if (!options.headers) {
+        options.headers = {};
+      }
+      if (token) {
+        options.headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(url, options);
+      if (response.status === 401) {
+        window.location.href = '/Login.html'; 
+      }
+      if(!response.ok){
+        const data = await response.json();
+         throw new Error(data.message);
+        }
+      return response;
+    };
+
+    const getCookie = (name) => {
+      let nameEQ = name + "=";
+      let ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    };
+
+    const placeOrder = async () => {
+      try {
+        const addressElement = document.querySelector('input[name="address"]:checked');
+        if (!addressElement) {
+          alert('Please select an address.');
+          return;
+        }
+        
+        const addressId = addressElement.value;
+        const paymentType = document.getElementById('payment').value;
+
+        const url = `https://localhost:7029/api/Order/MakePayment?paymentType=${paymentType}&addressId=${addressId}`;
+
+        const response = await fetchWithAuth(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          alert('Order placed successfully!');
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.message);
+        }
+      } catch (error) {
+        console.error('Error placing order:', error);
+        alert(error.message);
+      }
+    };
+
+   
+  </script>
+</body>
+
+</html>

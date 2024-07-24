@@ -20,11 +20,11 @@ namespace VideoStoreManagementApi.Controllers
         {
             _videoService = videoService;
         }
-        [Authorize]
+        
         [HttpGet("VideoPagination")]
-        [ProducesResponseType(typeof(IList<VideoDTO>) , StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Pagination<VideoDTO>) , StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDTO) , StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IList<VideoDTO>>> GetAllVideoApi(int pageNumber , int pageSize)
+        public async Task<ActionResult<Pagination<VideoDTO>>> GetAllVideoApi(int pageNumber , int pageSize)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace VideoStoreManagementApi.Controllers
                 return NotFound(new ErrorDTO(404, ex.Message));
             }
         }
-        [Authorize]
+        
         [HttpGet("GetVideoById")]
         [ProducesResponseType(typeof(VideoDTO) , StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDTO) , StatusCodes.Status404NotFound)]
@@ -50,21 +50,22 @@ namespace VideoStoreManagementApi.Controllers
                 return NotFound(new ErrorDTO(404, ex.Message));
             }
         }
-        [Authorize]
+        
         [HttpGet("Search")]
         [ProducesResponseType(typeof(IEnumerable<VideoDTO>) , StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(MessageDTO), StatusCodes.Status404NotFound)]
         
-        public async Task<ActionResult<IList<VideoDTO>>> SearchApi(string name, int pageNumber, int pageSize)
+        public async Task<ActionResult<IList<VideoDTO>>> SearchApi(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
                 return BadRequest(new ErrorDTO(400, "Search query cannot be empty."));
             }
-            var videos = await _videoService.Search(name, pageNumber, pageSize);
+            var videos = await _videoService.Search(name);
             if(videos == null || videos.Count == 0)
             {
-                return Ok(new { Message = "No videos found matching your search criteria" });
+                return NotFound(new MessageDTO() { Message = "No Such Vidoes Found"});
             }
             return Ok(videos);
         }

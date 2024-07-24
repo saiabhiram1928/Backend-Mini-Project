@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flix-Login</title>
+    <link rel="stylesheet" href="./src/output.css">
+    <style>
+        .logo {
+            color: #E50914;
+        }
+        .valid {
+            color: green;
+        }
+        .invalid {
+            color: white;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 bg-red-900 ">
+    <div class="w-full max-w-md p-8 bg-black border-2 bg-opacity-75 rounded-xl shadow-xl shadow-zinc-200">
+        <div class="mb-6 text-center">
+            <h1 class="text-4xl font-bold text-red-600">Flix</h1>
+        </div>
+        <form id="loginForm" class="space-y-4" novalidate>
+            <div>
+                <label for="email" class="block text-gray-400">Email</label>
+                <input type="email" id="email" name="email" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" placeholder="Email">
+                <p id="emailError" class="hidden mt-1 text-sm text-red-600">Please enter a valid email address or phone number.</p>
+            </div>
+            <div>
+                <label for="password" class="block text-gray-400">Password</label>
+                <input type="password" id="password" name="password" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" placeholder="Password" oninput="validatePassword()">
+                <ul class="mt-1 text-sm">
+                    <li id="length" class="invalid">Minimum 8 characters</li>
+                    <li id="uppercase" class="invalid">At least one uppercase letter</li>
+                    <li id="number" class="invalid">At least one number</li>
+                    <li id="special" class="invalid">At least one special character</li>
+                </ul>
+                <p id="passwordError" class="hidden mt-1 text-sm text-red-600">Your password does not meet the requirements.</p>
+            </div>
+            <button type="submit" class="w-full py-2 mt-6 text-lg font-semibold text-white bg-red-600 rounded hover:bg-red-700">Sign In</button>
+        </form>
+        <div class="flex justify-end mt-4 text-sm text-gray-500">
+            <a href="#" class="text-gray-400 hover:underline">Need help?</a>
+        </div>
+        <div class="mt-8 text-center">
+            <p class="text-gray-500">New to Flix? <a href="Register.html" class="text-white hover:underline">Sign up now</a>.</p>
+        </div>
+    </div>
+    <script>
+         const validatePassword = () => {
+            var password = document.getElementById('password').value;
+            var length = document.getElementById('length');
+            var uppercase = document.getElementById('uppercase');
+            var number = document.getElementById('number');
+            var special = document.getElementById('special');
+
+            
+            var lengthPattern = /.{8,}/;
+            var uppercasePattern = /[A-Z]/;
+            var numberPattern = /\d/;
+            var specialPattern = /[\W_]/;
+
+            if (lengthPattern.test(password)) {
+                length.classList.remove('invalid');
+                length.classList.add('valid');
+            } else {
+                length.classList.remove('valid');
+                length.classList.add('invalid');
+            }
+
+            if (uppercasePattern.test(password)) {
+                uppercase.classList.remove('invalid');
+                uppercase.classList.add('valid');
+            } else {
+                uppercase.classList.remove('valid');
+                uppercase.classList.add('invalid');
+            }
+
+            if (numberPattern.test(password)) {
+                number.classList.remove('invalid');
+                number.classList.add('valid');
+            } else {
+                number.classList.remove('valid');
+                number.classList.add('invalid');
+            }
+
+            if (specialPattern.test(password)) {
+                special.classList.remove('invalid');
+                special.classList.add('valid');
+            } else {
+                special.classList.remove('valid');
+                special.classList.add('invalid');
+            }
+        }
+    </script>
+    <script type="module" src="Login.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Movie</title>
+    <link rel="stylesheet" href="./src/output.css">
+    <style>
+        body {
+            font-family: monospace;
+        }
+        .logo {
+            color: #E50914;
+        }
+        .valid {
+            color: green;
+        }
+        .invalid {
+            color: white;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2d2d2d;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        .file-item p {
+            margin: 0;
+            color: #fff;
+        }
+        .file-item button {
+            background-color: #e50914;
+            color: #fff;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 bg-red-900">
+    <div class="w-full max-w-md p-8 bg-black border-2 bg-opacity-75 rounded-xl shadow-xl shadow-zinc-200">
+        <div class="mb-6 text-center">
+            <h1 class="text-4xl font-bold text-red-600">Add Movie</h1>
+        </div>
+        <form id="addMovieForm" class="space-y-4" enctype="multipart/form-data" novalidate>
+            <div>
+                <label for="tittle" class="block text-gray-400">Title</label>
+                <input type="text" id="tittle" name="tittle" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" placeholder="Title">
+            </div>
+            <div>
+                <label for="description" class="block text-gray-400">Description</label>
+                <textarea id="description" name="description" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" placeholder="Description"></textarea>
+            </div>
+            <div>
+                <label for="genre" class="block text-gray-400">Genre</label>
+                <select id="genre" name="genre" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500">
+                    <option value="Action">Action</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Drama">Drama</option>
+                    <option value="SciFi">Sci-Fi</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Thriller">Thriller</option>
+                </select>
+            </div>
+            <div>
+                <label for="director" class="block text-gray-400">Director</label>
+                <input type="text" id="director" name="director" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" placeholder="Director">
+            </div>
+            <div>
+                <label for="releaseDate" class="block text-gray-400">Release Date</label>
+                <input type="date" id="releaseDate" name="releaseDate" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" placeholder="Release Date">
+            </div>
+            <div>
+                <label for="price" class="block text-gray-400">Price</label>
+                <input type="number" id="price" name="price" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" placeholder="Price" step="0.01" min="0">
+            </div>
+            <div>
+                <label for="stock" class="block text-gray-400">Stock</label>
+                <input type="number" id="stock" name="stock" required class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" placeholder="Stock" min="0">
+            </div>
+            <div>
+                <label for="images" class="block text-gray-400">Images (1-4)</label>
+                <input type="file" accept="image/png" id="images" name="images" class="w-full px-3 py-2 mt-1 text-white bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-gray-500" multiple>
+                <div id="imageNames" class="mt-2 text-gray-400"></div>
+            </div>
+            <button type="submit" class="w-full py-2 mt-6 text-lg font-semibold text-white bg-red-600 rounded hover:bg-red-700">Add Movie</button>
+        </form>
+    </div>
+    <script type="module" src="AddVideo.js"></script>
+</body>
+</html>

@@ -55,6 +55,12 @@ namespace VideoStoreManagementApi
             });
             });
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            }));
             #region Authentication
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -112,6 +118,8 @@ namespace VideoStoreManagementApi
             }
 
             app.UseAuthentication();
+
+            app.UseCors("MyPolicy");
 
             app.UseHttpsRedirection();
 

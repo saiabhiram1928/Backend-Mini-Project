@@ -16,6 +16,7 @@ namespace VideoStoreManagementApi.Repositories
 
         public async Task<IEnumerable<Address>> GetAllAdressOfUser(int id)
         {
+            _context.ChangeTracker.Clear();
             var address = await _context.Addresses.Where(a => a.CustomerId == id).ToListAsync();
             return address;
         }

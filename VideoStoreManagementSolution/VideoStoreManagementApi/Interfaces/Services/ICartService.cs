@@ -9,5 +9,6 @@ namespace VideoStoreManagementApi.Interfaces.Services
         public  Task<CartDTO> ViewCart();
         public Task<CartDTO> EditCart(int cartItemId, int newQty);
         public Task<CartDTO> DeleteCartItem(int cartItemId);
+        public Task<int> CartItemsCount();
     }
 }

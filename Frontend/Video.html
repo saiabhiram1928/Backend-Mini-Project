@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video-Page</title>
+    <link rel="stylesheet" href="./src/output.css">
+</head>
+<body class="bg-gray-800 text-white min-h-screen">
+    <nav class="navbar w-full bg-black sticky flex items-center justify-between">
+        <div class="flex items-center w-1/4">
+            <a class="btn btn-ghost md:text-3xl text-xl text-red-800" href="Home.html">JustFlix</a>
+        </div>
+        
+        <form id="search-form" class="w-1/2 navbar-start hidden md:flex items-center p-3">
+            <div class="bg-inherit w-2/3 join-item">
+                <input id="search-text" class="w-full border-none input bg-gray-800 join-item" placeholder="Search...." />
+            </div>
+            <select id="search-genre" class="select join-item bg-gray-900 border-gray-700 text-white">
+                <option disabled selected>Genre</option>
+                <option>Action</option>
+                <option>Drama</option>
+                <option>Sci-Fi</option>
+                <option>Thriller</option>
+            </select>
+            <div class="indicator join-item">
+                <button type="submit" class="btn btn-rectangle btn-error border-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </form>
+        <div id="navbar-end" class="md:w-1/4 w-full p-3 flex justify-evenly">
+            <div class="block md:hidden p-3">
+                <button id="hamburger-menu" class="text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div id="mobile-search-form" class="hidden md:hidden flex-col w-full p-3 bg-gray-900">
+        <form class="flex flex-col items-center">
+            <input id="mobile-search-text" class="mb-2 w-11/12 border-none input bg-gray-800" placeholder="Search...." />
+            <select id="mobile-search-genre" class="mb-2 select bg-gray-900 border-gray-700 text-white w-11/12">
+                <option disabled selected>Genre</option>
+                <option>Action</option>
+                <option>Drama</option>
+                <option>Sci-Fi</option>
+                <option>Thriller</option>
+            </select>
+            <button type="submit" class="btn btn-error border-2 w-11/12">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                    <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </form>
+    </div>
+    <section class="py-8 text-white md:py-16 bg-gray-800 antialiased">
+        <div class="max-w-screen-xl px-4 mx-auto 2xl:px-0">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
+                <div class="shrink-0 max-w-md lg:max-w-lg mx-auto">
+                    <img id="video-image" class="w-3/4 block mx-auto" src="" alt="" />
+                    <div id="additional-images" class="mt-4 grid grid-cols-3 gap-2">
+                        <!-- Additional images will be added here dynamically -->
+                    </div>
+                </div>
+                <div class="mt-6 sm:mt-8 lg:mt-0">
+                    <h1 id="video-title" class="text-xl font-semibold sm:text-2xl text-white"></h1>
+                    <div class="mt-4 sm:items-center sm:gap-4 sm:flex">
+                        <p id="video-price" class="text-2xl font-extrabold sm:text-3xl text-white"></p>
+                        <p id="video-release-date" class="text-xl font-semibold sm:text-2xl text-white ml-4"></p>
+                    </div>
+                    <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
+                        <select id="video-quantity" class="select select-ghost bg-green-400">
+                            <option disabled selected>Qty</option>
+                        </select>
+                        <button id="add-to-cart" class="btn btn-success bg-red-800 relative overflow-hidden" role="button">
+                            <svg class="w-5 h-5 -ms-2 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6" />
+                            </svg>
+                            Add to cart
+                            <div id="loader" class="hidden absolute inset-0  items-center justify-center bg-black bg-opacity-75">
+                                <div class="spinner-border animate-spin inline-block w-6 h-6 border-4 rounded-full text-red-800"></div>
+                            </div>
+                        </button>
+                    </div>
+                    <hr class="my-6 md:my-8 border-gray-800" />
+                    <p id="video-description" class="mb-6 text-gray-400"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="module" src="Navbar.js"></script>
+    <script src="Video.js" type="module"></script>
+</body>
+</html>

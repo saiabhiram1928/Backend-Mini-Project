@@ -26,17 +26,17 @@ namespace VideoStoreManagementApi.Repositories
            return await _context.Videos.AnyAsync(v => v.Tittle.ToLower() == text.ToLower());
         }
 
-        public async Task<IList<Video>> QueryContains(string text, int pageNumber, int pageSize)
+        public async Task<IList<Video>> QueryContains(string text)
         {
             var textLower = text.ToLower();
-            
+
             var videos = await _context.Videos
                 .Where(v =>
                     v.Tittle.ToLower().Contains(textLower) ||
                     v.Description.ToLower().Contains(textLower) ||
                     v.Director.ToLower().Contains(textLower) ||
                     v.Genre.Equals(textLower)
-                    ).Skip((pageNumber - 1) * pageSize).Take(pageSize)
+                    )
                 .ToListAsync();
             return videos;
         }
@@ -55,6 +55,16 @@ namespace VideoStoreManagementApi.Repositories
                 SingleOrDefaultAsync(v => v.Id == id);
             if (video == null) throw new NullReferenceException("No Such Video Exist");
             return video.Price;
+        }
+
+        public async Task<int> GetVideoCount()
+        {
+          return await _context.Videos.CountAsync();
+        }
+        public async Task<int> GetStockOfVideo(int vid)
+        {
+            var video = await _context.Inventories.SingleOrDefaultAsync(v => v.VideoId == vid);
+            return video.Stock;
         }
     }
 }

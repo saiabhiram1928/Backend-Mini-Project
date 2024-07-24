@@ -34,5 +34,11 @@ namespace VideoStoreManagementApi.Repositories
             var item= await _context.Carts.SingleOrDefaultAsync(c => c.CustomerId == uid);
             return item;
         }
+        public async Task<int> CartItemsCount(int uid)
+        {
+            var count = await _context.Carts.Include(c=>c.CartItems).SingleOrDefaultAsync(c => c.CustomerId==uid);
+            if (count == null) return -1;
+            return count.CartItems.Count();
+        }
     }
 }

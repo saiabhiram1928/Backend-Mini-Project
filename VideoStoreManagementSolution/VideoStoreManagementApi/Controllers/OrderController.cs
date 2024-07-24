@@ -287,7 +287,27 @@ namespace VideoStoreManagementApi.Controllers
                 return BadRequest(new ErrorDTO(403, ex.Message));
             }
         }
-
+        [Authorize(Roles = "Admin , Employee")]
+        [HttpPost("ReturnVideos")]
+        [ProducesResponseType(typeof(Rental), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Rental>> ReturnVideos (int orderId)
+        {
+            try
+            {
+                var res = await _orderService.ReturnVideos(orderId);
+                return Ok(res);
+            }
+           
+            catch (NoSuchItemInDbException ex)
+            {
+                return NotFound(new ErrorDTO(404, ex.Message));
+            }catch(Exception ex)
+            {
+                return BadRequest(new ErrorDTO(403, ex.Message));
+            }
+        }
+        
        
 
     }

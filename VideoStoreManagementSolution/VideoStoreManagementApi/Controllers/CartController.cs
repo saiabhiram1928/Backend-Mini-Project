@@ -86,7 +86,12 @@ namespace VideoStoreManagementApi.Controllers
             }catch(UnauthorizedAccessException ex)
             {
                 return Unauthorized(new ErrorDTO(403,ex.Message));
-            }catch(DbException ex)
+            }
+            catch (QunatityOutOfStockException ex)
+            {
+                return BadRequest(new ErrorDTO(400, ex.Message));
+            }
+            catch (DbException ex)
             {
                 return InternalServerError<CartDTO>.Action(new ErrorDTO(500, ex.Message));
             }
@@ -116,6 +121,30 @@ namespace VideoStoreManagementApi.Controllers
             catch (DbException ex)
             {
                 return InternalServerError<CartDTO>.Action(new ErrorDTO(500, ex.Message));
+            }
+
+        }
+        [Authorize]
+        [HttpGet("CartItemCount")]
+        public async Task<ActionResult<int>> GetCartCount()
+        {
+            try
+            {
+                var res = await _cartService.CartItemsCount();
+                return Ok(res);
+            }
+            catch (UnauthorizedUserException ex)
+            {
+                return Unauthorized(new ErrorDTO(401, ex.Message));
+            }
+            catch (NoSuchItemInDbException ex)
+            {
+                return NotFound(new ErrorDTO(404, ex.Message));
+            }
+            
+            catch (Exception ex)
+            {
+                return InternalServerError<int>.Action(new ErrorDTO(500, ex.Message));
             }
 
         }

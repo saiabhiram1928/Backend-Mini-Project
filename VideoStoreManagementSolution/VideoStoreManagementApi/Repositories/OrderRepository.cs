@@ -19,8 +19,7 @@ namespace VideoStoreManagementApi.Repositories
 
         public override async Task<Order> GetById(int key)
         {
-            var item = await _context.Orders.Include(o=> o.OrderItems).Include(o => o.DeliveryAddress).Include(o=>o.Payments).
-                SingleOrDefaultAsync(x => x.Id == key);
+            var item = await _context.Orders.Include(o=> o.OrderItems).Include(o => o.DeliveryAddress).Include(o=>o.Payments).                SingleOrDefaultAsync(x => x.Id == key);
             return item;
         }
         public async Task<IList<Order>> GetOrdersByUid(int uid)

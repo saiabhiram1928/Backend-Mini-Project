@@ -18,5 +18,6 @@ namespace VideoStoreManagementApi.Interfaces.Services
         public  Task<IList<Order>> ViewAllOrdersAreBasedOnStatusdForAdmin(OrderStatus orderStatus);
         public  Task<Order> GetOrderbyIdForAdmin(int orderId);
         public Task<IList<Order>> GetAllOrdersForAdmin(int pageNumber, int pageSize);
+        public Task<Rental> ReturnVideos(int orderId);
     }
 }

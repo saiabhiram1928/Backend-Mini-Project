@@ -72,6 +72,7 @@ namespace VideoStoreManagementApi.Services
             addressDTO.PrimaryAdress = a.PrimaryAdress;
             addressDTO.Zipcode = a.Zipcode;
             addressDTO.Id = a.Id;
+            addressDTO.State = a.State;
             return addressDTO;
         }
 

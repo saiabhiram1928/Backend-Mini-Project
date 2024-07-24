@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using VideoStoreManagementApi.CustomAction;
 using VideoStoreManagementApi.Exceptions;
 using VideoStoreManagementApi.Interfaces.Repositories;
 using VideoStoreManagementApi.Interfaces.Services;
@@ -33,7 +34,7 @@ namespace VideoStoreManagementApi.Services
         /// <param name="pageSize"></param>
         /// <returns>VideoDTO</returns>
         /// <exception cref="NoItemsInDbException"></exception>
-        public async Task<List<VideoDTO>> GetAllVideos(int pageNumber, int pageSize)
+        public async Task<Pagination<VideoDTO>> GetAllVideos(int pageNumber, int pageSize)
         {
             var videoList = await _videoRepository.GetAllByPagination(pageNumber, pageSize);
             if(videoList == null) { throw new NoItemsInDbException("No Videos Presnet"); }
@@ -43,7 +44,14 @@ namespace VideoStoreManagementApi.Services
                 int qty = await _inventoryRepository.GetQty(video.Id);
                 videoDTOs.Add(_dtoService.MapVideoToVideoDTO(video, qty));
             }
-            return videoDTOs;
+            int totalCount = await _videoRepository.GetVideoCount();
+            Pagination<VideoDTO> pagination = new Pagination<VideoDTO>()
+            {
+                Items = videoDTOs,
+                TotalItems = totalCount
+            };
+            
+            return pagination;
         }
         #endregion
 
@@ -74,9 +82,9 @@ namespace VideoStoreManagementApi.Services
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         /// <returns> Returns a List of Videos</returns>
-        public async Task<IList<VideoDTO>> Search(string name , int pageNumber, int pageSize)
+        public async Task<IList<VideoDTO>> Search(string name)
         {
-            var list = await _videoRepository.QueryContains(name,pageNumber, pageSize);
+            var list = await _videoRepository.QueryContains(name);
             List<VideoDTO> videoDTOs = new List<VideoDTO>();
             foreach (var  item in list)
             {

@@ -151,7 +151,13 @@ namespace VideoStoreManagementApi.Services
                 {
                     throw new UnauthorizedAccessException("You Dont Acess To this cartItem");
                 }
-                float price = await _videoRepository.GetPriceOfVideo(cartItem.VideoId);
+            var stock = await _videoRepository.GetStockOfVideo(cartItem.VideoId);
+                if (newQty > stock )
+                {
+                    throw new QunatityOutOfStockException("We dont Have Stock");
+                }
+            float price = await _videoRepository.GetPriceOfVideo(cartItem.VideoId);
+             
                 cart.TotalPrice -= cartItem.Price;
                 cartItem.Qty = newQty;
                 cartItem.Price = price * newQty;
@@ -195,6 +201,21 @@ namespace VideoStoreManagementApi.Services
             await _cartRepository.Update(cart);
             var cartItems = await _cartItemsRepository.GetCartItemsWithCartId(cart.Id);
             return _dTOService.MapCartToCartDTO(cart, cartItems.ToList());
+        }
+        #endregion
+
+        #region CartItemsCount
+        public async Task<int> CartItemsCount()
+        {
+            var uid = _tokenService.GetUidFromToken();
+            if (uid == null)
+            {
+                throw new UnauthorizedUserException("Token Invalid");
+            }
+            var count = await _cartRepository.CartItemsCount((int)uid);
+            if (count == -1) throw new NoSuchItemInDbException("No Such Cart Found");
+            return count;
+
         }
         #endregion
 
